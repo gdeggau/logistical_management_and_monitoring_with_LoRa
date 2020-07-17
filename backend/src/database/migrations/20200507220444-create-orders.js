@@ -48,9 +48,17 @@ module.exports = {
         onDelete: "SET NULL",
         allowNull: false,
       },
+      observation: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      delivery_date: {
+        type: Sequelize.DATE,
+        allowNull: true,
+      },
       status: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
         defaultValue: "PENDING",
       },
       observation: {

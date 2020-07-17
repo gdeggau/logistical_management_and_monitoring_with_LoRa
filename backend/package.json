@@ -8,6 +8,8 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cls-hooked": "^4.2.2",
+    "date-fns": "^2.14.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.25.3",

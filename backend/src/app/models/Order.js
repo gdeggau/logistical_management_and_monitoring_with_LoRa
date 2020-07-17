@@ -13,6 +13,7 @@ class Order extends Model {
         total_price: Sequelize.FLOAT,
         status: Sequelize.STRING,
         observation: Sequelize.STRING,
+        delivery_date: Sequelize.STRING,
       },
       {
         sequelize,
@@ -33,6 +34,14 @@ class Order extends Model {
     this.belongsTo(models.Adress, {
       foreignKey: "delivery_adress_id",
       as: "delivery_adress",
+    });
+    this.belongsToMany(models.Cargo, {
+      foreignKey: "order_id",
+      through: models.CargosOrders,
+      as: "cargos",
+    });
+    this.hasMany(models.OrdersHistory, {
+      foreignKey: "order_id",
     });
   }
 }

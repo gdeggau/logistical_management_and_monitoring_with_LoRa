@@ -11,9 +11,12 @@ import VehicleController from "./app/controllers/VehicleController";
 import AdressController from "./app/controllers/AdressController";
 import UserAdressesController from "./app/controllers/UsersAdressesController";
 import ProductController from "./app/controllers/ProductController";
+import CargoController from "./app/controllers/CargoController";
 
 import authMiddleware from "./app/middlewares/auth";
 import UserOrderController from "./app/controllers/UserOrderController";
+
+import STATUS from "./app/utils/EnumStatusCargo";
 
 const routes = new Router();
 const upload = multer(multerConfig);
@@ -26,6 +29,11 @@ routes.use(authMiddleware);
 
 routes.put("/users", UserController.update);
 
+routes.get("/teste", async (req, res) => {
+  console.log("entrou");
+  return res.json({ message: STATUS.ONDELIVERY });
+});
+
 routes.get("/employees", EmployeeController.index);
 routes.get("/orders", UserOrderController.index);
 
@@ -34,6 +42,7 @@ routes.post("/vehicles", VehicleController.store);
 routes.post("/usersAdresses", UserAdressesController.store);
 routes.post("/products", ProductController.store);
 routes.post("/orders", UserOrderController.store);
+routes.post("/cargos", CargoController.store);
 routes.post("/files", upload.single("file"), FileController.store);
 
 export default routes;

@@ -17,7 +17,7 @@ class VehicleController {
       return res.status(400).json({ error: "Validation fails" });
     }
 
-    const { device, ...vehicle } = req.body;
+    const vehicle = req.body;
 
     const vehicleExists = await Vehicle.findOne({
       where: { license_plate: vehicle.license_plate },
@@ -27,10 +27,6 @@ class VehicleController {
       return res.status(400).json({ error: "Vehicle already exists" });
     }
 
-    if (device) {
-      vehicle.device_id = device.id;
-    }
-
     const {
       id,
       license_plate,
@@ -38,6 +34,7 @@ class VehicleController {
       brand,
       reference,
       active,
+      device_id,
     } = await Vehicle.create(vehicle);
 
     return res.json({
@@ -47,7 +44,7 @@ class VehicleController {
       brand,
       reference,
       active,
-      device,
+      device_id,
     });
   }
 }

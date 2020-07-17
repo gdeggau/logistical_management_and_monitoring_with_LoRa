@@ -6,6 +6,8 @@ import UserAdresses from "../models/UsersAdresses";
 import Product from "../models/Product";
 import User from "../models/User";
 
+import StatusOrder from "../utils/EnumStatusOrder";
+
 class OrderController {
   async store(req, res) {
     const schema = Yup.object().shape({
@@ -50,16 +52,29 @@ class OrderController {
       product_id,
       delivery_adress_id,
       quantity,
-    } = await Order.create({
-      user_id: req.userId,
-      product_id: req.body.product_id,
-      delivery_adress_id: userAdress.adress_id,
-      quantity: req.body.quantity,
-      freight,
-      total_price,
-      status,
-      observation,
-    });
+    } = await Order.create(
+      {
+        user_id: req.userId,
+        product_id: req.body.product_id,
+        delivery_adress_id: userAdress.adress_id,
+        quantity: req.body.quantity,
+        freight,
+        total_price,
+        status,
+        observation,
+        orders_history: {
+          status: StatusOrder.PENDING.value,
+          observation: StatusOrder.PENDING.description,
+        },
+      },
+      {
+        include: [
+          {
+            association: "orders_history",
+          },
+        ],
+      }
+    );
 
     return res.json({
       id,
