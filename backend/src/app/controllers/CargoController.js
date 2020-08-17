@@ -1,5 +1,4 @@
 import * as Yup from "yup";
-import sequelize from "sequelize";
 import sequelizeInstance from "../../database/index";
 
 import Vehicle from "../models/Vehicle";

@@ -2,112 +2,107 @@
 import * as Yup from "yup";
 import User from "../models/User";
 
+import sequelizeInstance from "../../database/index";
+
 import Adress from "../models/Adress";
+import File from "../models/File";
 
 class UserController {
   async store(req, res) {
-    const schemaUser = Yup.object().shape({
-      name: Yup.string().required(),
-      last_name: Yup.string().required(),
-      email: Yup.string().email().required(),
-      telephone: Yup.string().notRequired(),
-      password: Yup.string().required().min(6),
-    });
-    const schemaAddress = Yup.object().shape({
-      cep: Yup.string().required(),
-      address: Yup.string().required(),
-      number: Yup.number().notRequired(),
-      complement: Yup.string().notRequired(),
-      district: Yup.string().required(),
-      city: Yup.string().required(),
-      state: Yup.string().required(),
-    });
+    let transaction;
+    let userCreated;
+    let adressCreated;
+    try {
+      const schemaUser = Yup.object().shape({
+        name: Yup.string().required(),
+        last_name: Yup.string().required(),
+        email: Yup.string().email().required(),
+        telephone: Yup.string().notRequired(),
+        password: Yup.string().required().min(6),
+      });
+      const schemaAddress = Yup.object().shape({
+        cep: Yup.string().required(),
+        address: Yup.string().required(),
+        number: Yup.number().notRequired(),
+        complement: Yup.string().notRequired(),
+        district: Yup.string().required(),
+        city: Yup.string().required(),
+        state: Yup.string().required(),
+      });
 
-    const { adress, ...user } = req.body;
+      const { adress, ...user } = req.body;
 
-    if (!(await schemaUser.isValid(user))) {
-      return res.status(400).json({ error: "User's validation fails" });
-    }
+      if (!(await schemaUser.isValid(user))) {
+        return res.status(400).json({ error: "User's validation fails" });
+      }
 
-    if (!(await schemaAddress.isValid(adress))) {
-      return res.status(400).json({ error: "Addresse's validation fails" });
-    }
+      // if (!(await schemaAddress.isValid(adress))) {
+      //   return res.status(400).json({ error: "Addresse's validation fails" });
+      // }
 
-    const userExists = await User.findOne({ where: { email: user.email } });
+      transaction = await sequelizeInstance.connection.transaction();
+      const userExists = await User.findOne({ where: { email: user.email } });
 
-    if (userExists) {
-      return res.status(400).json({ error: "User already exists" });
-    }
+      if (userExists) {
+        return res.status(400).json({ error: "User already exists" });
+      }
 
-    const userCreated = await User.create(user);
-    const adressCreated = await Adress.create(adress);
+      userCreated = await User.create(user, { transaction });
+      // adressCreated = await Adress.create(adress, { transaction });
 
-    await userCreated.addAdresses(adressCreated, {
-      through: { main_adress: true },
-    });
+      // await userCreated.addAdresses(adressCreated, {
+      //   through: { main_adress: true },
+      //   transaction,
+      // });
 
-    // const useradress = await User.findByPk(userCreated.id, {
-    //   attributes: ["id", "name", "last_name", "telephone", "email", "employee"],
-    //   include: {
-    //     association: "adresses",
-    //     attributes: [
-    //       "id",
-    //       "cep",
-    //       "address",
-    //       "number",
-    //       "complement",
-    //       "district",
-    //       "city",
-    //       "state",
-    //     ],
-    //     where: {
-    //       id: adressCreated.id,
-    //     },
-    //     through: {
-    //       attributes: ["main_adress", "delivery_adress"],
-    //       as: "options",
-    //     },
-    //   },
-    // });
-    const useradress = await User.findByPk(userCreated.id, {
-      attributes: ["id", "name", "last_name", "telephone", "email", "employee"],
-      joinTableAttributes: ["main_adress", "delivery_adress"],
-      include: {
-        association: "adresses",
+      const useradress = await User.findByPk(userCreated.id, {
         attributes: [
           "id",
-          "cep",
-          "address",
-          "number",
-          "complement",
-          "district",
-          "city",
-          "state",
+          "name",
+          "last_name",
+          "telephone",
+          "email",
+          "employee",
         ],
-        where: {
-          id: adressCreated.id,
+        joinTableAttributes: ["main_adress", "delivery_adress"],
+        include: {
+          association: "adresses",
+          attributes: [
+            "id",
+            "cep",
+            "address",
+            "number",
+            "complement",
+            "district",
+            "city",
+            "state",
+          ],
+          // where: {
+          //   id: adressCreated.id,
+          // },
+          through: {
+            attributes: ["main_adress", "delivery_adress", "active"],
+            as: "options",
+          },
         },
-        through: {
-          attributes: ["main_adress", "delivery_adress", "active"],
-          as: "options",
-        },
-      },
-    });
+        transaction,
+      });
 
-    return res.json(useradress);
-    // return res.json({
-    //   id,
-    //   name,
-    //   last_name,
-    //   email,
-    //   telephone,
-    //   employee,
-    //   userAdress,
-    // });
-    // return next();
+      await transaction.commit();
+
+      return res.json(useradress);
+    } catch (err) {
+      // console.log(err);
+      if (transaction) await transaction.rollback();
+      return res.status(400).json({
+        error:
+          "An unexpected error occurred, please contact system administrator! ",
+      });
+    }
   }
 
   async update(req, res) {
+    console.log(req.body);
     const schema = Yup.object().shape({
       name: Yup.string(),
       last_name: Yup.string(),
@@ -145,10 +140,24 @@ class UserController {
       return res.status(401).json({ error: "Password does not match" });
     }
 
-    const { id, name, last_name, telephone, employee } = await user.update(
-      req.body
-    );
+    await user.update(req.body);
 
+    const {
+      id,
+      name,
+      last_name,
+      telephone,
+      employee,
+      avatar,
+    } = await User.findByPk(req.userId, {
+      include: [
+        {
+          model: File,
+          as: "avatar",
+          attributes: ["id", "path", "url"],
+        },
+      ],
+    });
     return res.json({
       id,
       name,
@@ -156,6 +165,7 @@ class UserController {
       email,
       telephone,
       employee,
+      avatar,
     });
   }
 }
