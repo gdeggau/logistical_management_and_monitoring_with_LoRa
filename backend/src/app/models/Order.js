@@ -14,6 +14,12 @@ class Order extends Model {
         status: Sequelize.STRING,
         observation: Sequelize.STRING,
         delivery_date: Sequelize.STRING,
+        barcode_scan: {
+          type: Sequelize.VIRTUAL,
+          get() {
+            return "RR" + this.id.split("-")[0].toUpperCase();
+          },
+        },
       },
       {
         sequelize,

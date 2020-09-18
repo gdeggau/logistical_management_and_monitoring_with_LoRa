@@ -1,7 +1,8 @@
 import * as Yup from "yup";
-
+import { Op } from "sequelize";
 import Vehicle from "../models/Vehicle";
 import Device from "../models/Device";
+import Order from "../models/Order";
 
 class VehicleController {
   async store(req, res) {
@@ -46,6 +47,34 @@ class VehicleController {
       active,
       device_id,
     });
+  }
+
+  async index(req, res) {
+    const vehicles = await Vehicle.findAll({
+      where: {
+        active: true,
+        device_id: {
+          [Op.ne]: null,
+        },
+      },
+      attributes: [
+        "id",
+        "license_plate",
+        "model",
+        "brand",
+        "reference",
+        "active",
+      ],
+      include: [
+        {
+          model: Device,
+          as: "device",
+          attributes: ["id", "name", "device_identifier"],
+        },
+      ],
+    });
+
+    return res.json(vehicles);
   }
 }
 

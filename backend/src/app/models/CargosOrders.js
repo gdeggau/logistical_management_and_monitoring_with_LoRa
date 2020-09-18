@@ -11,7 +11,7 @@ class CargosOrders extends Model {
           defaultValue: Sequelize.UUIDV4,
           primaryKey: true,
         },
-        pending_scan: Sequelize.BOOLEAN,
+        scanned: Sequelize.BOOLEAN,
       },
       {
         sequelize,

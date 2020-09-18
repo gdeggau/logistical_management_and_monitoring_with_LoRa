@@ -15,7 +15,13 @@ class User extends Model {
         //apena utilizado no código
         password: Sequelize.VIRTUAL,
         password_hash: Sequelize.STRING,
-        employee: Sequelize.BOOLEAN,
+        role: Sequelize.STRING,
+        full_name: {
+          type: Sequelize.VIRTUAL,
+          get() {
+            return `${this.name} ${this.last_name}`;
+          },
+        },
       },
       {
         sequelize,

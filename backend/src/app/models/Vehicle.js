@@ -11,6 +11,12 @@ class Vehicle extends Model {
         brand: Sequelize.STRING,
         reference: Sequelize.STRING,
         active: Sequelize.BOOLEAN,
+        barcode_scan: {
+          type: Sequelize.VIRTUAL,
+          get() {
+            return "VV" + this.id.split("-")[0].toUpperCase();
+          },
+        },
       },
       {
         sequelize,

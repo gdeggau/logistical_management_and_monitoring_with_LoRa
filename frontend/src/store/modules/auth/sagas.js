@@ -27,7 +27,7 @@ export function* signIn({ payload }) {
 
     yield put(signInSuccess(token, user));
 
-    history.push("/vehicle");
+    history.push("/address/new");
   } catch (err) {
     toast.error("E-mail or password is wrong!");
     yield put(signFailure());

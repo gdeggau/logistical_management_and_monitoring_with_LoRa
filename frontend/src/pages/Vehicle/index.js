@@ -1,7 +1,4 @@
 import React from "react";
-import api from "~/services/api";
-
-import Header from "~/components/Header";
 
 import { Container, Content } from "./styles";
 

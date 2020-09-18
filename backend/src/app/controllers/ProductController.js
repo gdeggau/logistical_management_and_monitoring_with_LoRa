@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 import Product from "../models/Product";
+import User from "../models/User";
 
 class ProductController {
   async store(req, res) {
@@ -38,6 +39,14 @@ class ProductController {
       image_id,
       active,
     });
+  }
+
+  async index(req, res) {
+    const products = await Product.findAll({
+      where: { active: true },
+    });
+
+    return res.json(products);
   }
 }
 

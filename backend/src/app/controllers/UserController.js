@@ -56,14 +56,7 @@ class UserController {
       // });
 
       const useradress = await User.findByPk(userCreated.id, {
-        attributes: [
-          "id",
-          "name",
-          "last_name",
-          "telephone",
-          "email",
-          "employee",
-        ],
+        attributes: ["id", "name", "last_name", "telephone", "email", "role"],
         joinTableAttributes: ["main_adress", "delivery_adress"],
         include: {
           association: "adresses",
@@ -147,7 +140,7 @@ class UserController {
       name,
       last_name,
       telephone,
-      employee,
+      role,
       avatar,
     } = await User.findByPk(req.userId, {
       include: [
@@ -164,7 +157,7 @@ class UserController {
       last_name,
       email,
       telephone,
-      employee,
+      role,
       avatar,
     });
   }

@@ -4,7 +4,9 @@ import PropTypes from "prop-types";
 import Header from "~/components/Header";
 import MenuLeft from "~/components/MenuLeft";
 
-import { Wrapper, Content } from "./styles";
+import { Wrapper } from "./styles";
+
+import { Container } from "reactstrap";
 
 // import { Container } from './styles';
 
@@ -13,10 +15,10 @@ function DefaultLayout({ children }) {
   return (
     <Wrapper>
       <MenuLeft />
-      <Content>
+      <Container fluid={true} style={{ padding: "0", overflow: "auto" }}>
         <Header />
         {children}
-      </Content>
+      </Container>
     </Wrapper>
   );
 }

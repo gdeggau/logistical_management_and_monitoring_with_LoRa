@@ -12,11 +12,16 @@ import AdressController from "./app/controllers/AdressController";
 import UserAdressesController from "./app/controllers/UsersAdressesController";
 import ProductController from "./app/controllers/ProductController";
 import CargoController from "./app/controllers/CargoController";
+import CargoDeliveryController from "./app/controllers/CargoDeliveryController";
+import UserOrderController from "./app/controllers/UserOrderController";
+import OrderController from "./app/controllers/OrderController";
 
 import authMiddleware from "./app/middlewares/auth";
-import UserOrderController from "./app/controllers/UserOrderController";
+import admin from "./app/middlewares/admin";
+import DriverController from "./app/controllers/DriverController";
 
-import STATUS from "./app/utils/EnumStatusCargo";
+// import STATUS from "./app/utils/EnumStatusCargo";
+// import UserAdr from "./app/models/UsersAdresses";
 
 const routes = new Router();
 const upload = multer(multerConfig);
@@ -29,20 +34,36 @@ routes.use(authMiddleware);
 
 routes.put("/users", UserController.update);
 
-routes.get("/teste", async (req, res) => {
-  console.log("entrou");
-  return res.json({ message: STATUS.ONDELIVERY });
-});
+// routes.get("/teste", async (req, res) => {
+//   const { count } = await UserAdr.findAndCountAll({
+//     where: {
+//       user_id: "e98fb09f-0be3-4a1e-a9b6-387a85724dc4",
+//       main_adress: true,
+//     },
+//   });
+//   return res.json(count);
+// });
 
 routes.get("/employees", EmployeeController.index);
-routes.get("/orders", UserOrderController.index);
+routes.get("/orders/user", UserOrderController.index);
+
+routes.get("/adresses/user", UserAdressesController.index);
+routes.get("/products", ProductController.index);
 
 routes.post("/devices", DeviceController.store);
 routes.post("/vehicles", VehicleController.store);
-routes.post("/usersAdresses", UserAdressesController.store);
+routes.post("/adresses/user", UserAdressesController.store);
 routes.post("/products", ProductController.store);
-routes.post("/orders", UserOrderController.store);
-routes.post("/cargos", CargoController.store);
+routes.post("/orders/user", UserOrderController.store);
+
 routes.post("/files", upload.single("file"), FileController.store);
 
+routes.use(admin);
+routes.post("/cargos", CargoController.store);
+routes.post("/cargos/delivery", CargoDeliveryController.store);
+
+routes.get("/cargos", CargoController.index);
+routes.get("/orders", OrderController.index);
+routes.get("/vehicles", VehicleController.index);
+routes.get("/drivers", DriverController.index);
 export default routes;

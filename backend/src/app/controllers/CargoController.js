@@ -29,20 +29,20 @@ class CargoController {
       return res.status(400).json({ error: "Validation fails!" });
     }
 
-    const checkIsEmployee = await User.findOne({
-      where: { id: req.userId, employee: true },
-    });
-    if (!checkIsEmployee) {
-      return res
-        .status(400)
-        .json({ error: "Just employees can create a cargo!" });
-    }
+    // const checkIsEmployee = await User.findOne({
+    //   where: { id: req.userId, employee: true },
+    // });
+    // if (!checkIsEmployee) {
+    //   return res
+    //     .status(400)
+    //     .json({ error: "Just employees can create a cargo!" });
+    // }
 
     const checkDriverIsEmployee = await User.findOne({
-      where: { id: req.body.driver_id, employee: true },
+      where: { id: req.body.driver_id, role: "DRIVER" },
     });
     if (!checkDriverIsEmployee) {
-      return res.status(400).json({ error: "Driver must be an employee!" });
+      return res.status(400).json({ error: "User must be a driver!" });
     }
 
     const checkVehicleHasDevice = await Vehicle.findOne({
@@ -75,65 +75,70 @@ class CargoController {
       const checkAvailabilityDriverOrVehicle = await Cargo.findOne(
         {
           where: {
-            [Op.or]: [
-              {
-                driver_id: req.body.driver_id,
-              },
-              {
-                vehicle_id: req.body.vehicle_id,
-              },
-            ],
-
-            [Op.or]: [
+            [Op.and]: [
               {
                 [Op.or]: [
                   {
-                    [Op.and]: [
-                      {
-                        plan_delivery_date_leave: {
-                          [Op.lt]: req.body.plan_delivery_date_leave,
-                        },
-                      },
-                      {
-                        plan_delivery_date_return: {
-                          [Op.gt]: req.body.plan_delivery_date_leave,
-                        },
-                      },
-                    ],
+                    driver_id: req.body.driver_id,
                   },
                   {
-                    [Op.and]: [
-                      {
-                        plan_delivery_date_leave: {
-                          [Op.lt]: req.body.plan_delivery_date_return,
-                        },
-                      },
-                      {
-                        plan_delivery_date_return: {
-                          [Op.gt]: req.body.plan_delivery_date_return,
-                        },
-                      },
-                    ],
+                    vehicle_id: req.body.vehicle_id,
                   },
                 ],
               },
               {
-                [Op.and]: [
+                [Op.or]: [
                   {
-                    plan_delivery_date_leave: {
-                      [Op.between]: [
-                        req.body.plan_delivery_date_leave,
-                        req.body.plan_delivery_date_return,
-                      ],
-                    },
+                    [Op.or]: [
+                      {
+                        [Op.and]: [
+                          {
+                            plan_delivery_date_leave: {
+                              [Op.lt]: req.body.plan_delivery_date_leave,
+                            },
+                          },
+                          {
+                            plan_delivery_date_return: {
+                              [Op.gt]: req.body.plan_delivery_date_leave,
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        [Op.and]: [
+                          {
+                            plan_delivery_date_leave: {
+                              [Op.lt]: req.body.plan_delivery_date_return,
+                            },
+                          },
+                          {
+                            plan_delivery_date_return: {
+                              [Op.gt]: req.body.plan_delivery_date_return,
+                            },
+                          },
+                        ],
+                      },
+                    ],
                   },
                   {
-                    plan_delivery_date_return: {
-                      [Op.between]: [
-                        req.body.plan_delivery_date_leave,
-                        req.body.plan_delivery_date_return,
-                      ],
-                    },
+                    [Op.and]: [
+                      {
+                        plan_delivery_date_leave: {
+                          [Op.between]: [
+                            req.body.plan_delivery_date_leave,
+                            req.body.plan_delivery_date_return,
+                          ],
+                        },
+                      },
+                      {
+                        plan_delivery_date_return: {
+                          [Op.between]: [
+                            req.body.plan_delivery_date_leave,
+                            req.body.plan_delivery_date_return,
+                          ],
+                        },
+                      },
+                    ],
                   },
                 ],
               },
@@ -144,6 +149,8 @@ class CargoController {
       );
 
       if (checkAvailabilityDriverOrVehicle) {
+        console.log(checkAvailabilityDriverOrVehicle);
+        await transaction.rollback();
         return res.status(400).json({
           error:
             "Driver or vehicle is already planned to do a delivery in that date.",
@@ -212,7 +219,7 @@ class CargoController {
 
       const ordersIds = [];
       ordersIdsFromReq.map((order) => {
-        ordersIds.push(order.order_id);
+        ordersIds.push(order.id);
       });
 
       const ordersFromDB = await Order.findAll(
@@ -237,6 +244,7 @@ class CargoController {
       console.log(ordersIds.length);
       console.log(ordersFromDB.length);
       if (ordersFromDB.length != ordersIds.length) {
+        await transaction.rollback();
         return res.status(400).json({
           error:
             "There is one or more order already in a cargo, review your choices.",
@@ -245,7 +253,7 @@ class CargoController {
 
       await cargo.addOrders(ordersFromDB, {
         as: "order_id",
-        through: { employee_id: req.userId, pending_scan: true },
+        through: { employee_id: req.userId, scanned: false },
         transaction,
       });
 
@@ -285,11 +293,18 @@ class CargoController {
         }
       );
 
+      await cargo.update(
+        {
+          status: StatusCargo.CLOSED.value,
+          observation: StatusCargo.CLOSED.description,
+        },
+        { transaction }
+      );
+
       await cargo.createCargosGeolocation(
         {
           status: StatusCargo.CLOSED.value,
           observation: StatusCargo.CLOSED.description,
-          transaction,
         },
         { transaction }
       );
@@ -332,7 +347,7 @@ class CargoController {
               "status",
             ],
             through: {
-              attributes: ["pending_scan", "employee_id"],
+              attributes: ["scanned", "employee_id"],
               as: "other_infos",
             },
             include: [
@@ -364,6 +379,107 @@ class CargoController {
       return res.json(cargoOrders);
     } catch (err) {
       console.log(err);
+      await transaction.rollback();
+      return res.status(400).json({
+        error:
+          "An unexpected error occurred, please contact system administrator! ",
+      });
+    }
+  }
+
+  async index(req, res) {
+    const { cargo_number } = req.query;
+    const filterCargoNumber = cargo_number
+      ? { [Op.eq]: cargo_number }
+      : { [Op.not]: null };
+
+    let transaction;
+    try {
+      const cargos = await Cargo.findAll({
+        where: { cargo_number: filterCargoNumber },
+        order: [
+          ["status", "ASC"],
+          ["plan_delivery_date_leave", "ASC"],
+        ],
+        attributes: [
+          "id",
+          "cargo_number",
+          "plan_delivery_date_leave",
+          "plan_delivery_date_return",
+          "delivery_date_leave",
+          "delivery_date_return",
+          "status",
+          "observation",
+          "createdAt",
+        ],
+        include: [
+          {
+            model: User,
+            as: "driver",
+            attributes: ["name", "last_name", "telephone", "email"],
+          },
+          {
+            model: Vehicle,
+            as: "vehicle",
+            attributes: [
+              "id",
+              "license_plate",
+              "barcode_scan",
+              "model",
+              "brand",
+              "reference",
+            ],
+            include: [
+              {
+                association: "device",
+                attributes: ["id", "name", "device_identifier"],
+              },
+            ],
+          },
+          {
+            model: Order,
+            as: "orders",
+            attributes: [
+              "id",
+              "order_number",
+              "barcode_scan",
+              "quantity",
+              "freight",
+              "total_price",
+              "status",
+            ],
+            through: {
+              attributes: ["scanned", "employee_id"],
+              as: "other_infos",
+            },
+            include: [
+              {
+                association: "product",
+                attributes: ["id", "name", "description"],
+              },
+              {
+                association: "user",
+                attributes: ["id", "name", "last_name", "telephone", "email"],
+              },
+              {
+                association: "delivery_adress",
+                attributes: [
+                  "id",
+                  "cep",
+                  "address",
+                  "number",
+                  "complement",
+                  "district",
+                  "city",
+                  "state",
+                ],
+              },
+            ],
+          },
+        ],
+      });
+      return res.json(cargos);
+    } catch (err) {
       if (transaction) await transaction.rollback();
       return res.status(400).json({
         error:
