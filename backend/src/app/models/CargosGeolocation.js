@@ -8,8 +8,8 @@ class CargosGeolocation extends Model {
         point: Sequelize.GEOMETRY("POINT"),
         status: Sequelize.STRING,
         observation: Sequelize.STRING,
-        latitude: Sequelize.DECIMAL(6, 9),
-        longitude: Sequelize.DECIMAL(6, 9),
+        latitude: Sequelize.DECIMAL(9, 6),
+        longitude: Sequelize.DECIMAL(9, 6),
       },
       {
         sequelize,

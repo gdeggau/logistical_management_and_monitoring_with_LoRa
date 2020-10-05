@@ -4,10 +4,12 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js",
+    "tunnel": "npx localtunnel --port 3333 --subdomain deggautcc -o --print-requests"
   },
   "dependencies": {
     "@sentry/node": "5.19.2",
+    "axios": "^0.20.0",
     "bcryptjs": "^2.4.3",
     "cls-hooked": "^4.2.2",
     "cors": "^2.8.5",
@@ -16,6 +18,7 @@
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
     "jsonwebtoken": "^8.5.1",
+    "localtunnel": "^2.0.0",
     "moment": "^2.25.3",
     "mongoose": "^5.9.9",
     "multer": "^1.4.2",

@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Formik, ErrorMessage } from "formik";
+import { Formik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 import history from "~/services/history";
-import styled from "styled-components";
+import Error from "~/components/Error";
+import dateFormat from "~/utils/dateFormat";
+import { SelectColumnFilter } from "~/components/Filter";
 import api from "~/services/api";
 import {
   setMinutes,
@@ -28,18 +30,6 @@ import {
   Label,
 } from "reactstrap";
 import TableContainer from "~/components/Table";
-
-const ErrorStyle = styled.div`
-  padding-top: 5px;
-  color: #ff3333;
-`;
-function Error({ name }) {
-  return (
-    <ErrorMessage name={name}>
-      {(msg) => <ErrorStyle>{msg}</ErrorStyle>}
-    </ErrorMessage>
-  );
-}
 
 function CargoNew() {
   const columns = useMemo(
@@ -67,10 +57,14 @@ function CargoNew() {
             />
           </div>
         ),
+        disableFilters: true,
+        disableSortBy: true,
       },
       {
         Header: "Order number",
         accessor: "order_number",
+        Filter: SelectColumnFilter,
+        filter: "equals",
       },
       {
         Header: "Status",
@@ -121,8 +115,8 @@ function CargoNew() {
         accessor: "delivery_adress.state",
       },
       {
-        Header: "Created at",
-        accessor: "created_at",
+        Header: "Ordered",
+        accessor: ({ created_at }) => dateFormat(created_at),
       },
     ],
     []

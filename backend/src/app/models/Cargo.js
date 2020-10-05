@@ -36,7 +36,10 @@ class Cargo extends Model {
       through: models.CargosOrders,
       as: "orders",
     });
-    this.hasMany(models.CargosGeolocation, { foreignKey: "cargo_id" });
+    this.hasMany(models.CargosGeolocation, {
+      foreignKey: "cargo_id",
+      as: "geolocations",
+    });
   }
 }
 

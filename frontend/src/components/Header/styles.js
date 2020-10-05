@@ -11,7 +11,8 @@ export const Content = styled.div`
   width: 100%;
   height: 54px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
+  /* justify-content: right; */
   align-items: center;
 
   div {
@@ -50,8 +51,8 @@ export const Content = styled.div`
 
   nav {
     display: flex;
-    justify-content: center;
     align-items: center;
+    float: right;
     opacity: 0.7;
     svg {
       margin-right: 5px;

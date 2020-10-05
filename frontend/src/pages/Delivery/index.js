@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { useSelector } from "react-redux";
 import Wrapper from "~/pages/_layouts/wrapper";
 import history from "~/services/history";
 import dateFormat from "~/utils/dateFormat";
@@ -22,7 +21,6 @@ import {
 } from "reactstrap";
 
 function Delivery({ match }) {
-  const profile = useSelector((state) => state.user.profile);
   const [cargo, setCargo] = useState();
   const [scanVehicle, setScanVehicle] = useState(false);
 
@@ -107,6 +105,8 @@ function Delivery({ match }) {
     );
   }
 
+  const isDisabled = () => (cargo.status === "CLOSED" ? false : true);
+
   function handleChangeScan(event) {
     const value = event.target.value.toUpperCase();
     if (value.length === 10) {
@@ -148,20 +148,34 @@ function Delivery({ match }) {
 
   async function handleStartDelivery(e) {
     e.preventDefault();
-    const orderNotScanned = cargo.orders.find(
-      (order) => order.other_infos.scanned === false
-    );
-    if (scanVehicle === false || orderNotScanned) {
-      return toast.error("There is orders or vehicle not scanned yet!");
+    try {
+      const orderNotScanned = cargo.orders.find(
+        (order) => order.other_infos.scanned === false
+      );
+      if (scanVehicle === false || orderNotScanned) {
+        return toast.error("There is orders or vehicle not scanned yet!");
+      }
+
+      const response = await api.post("cargos/delivery", {
+        id: cargo.id,
+        cargo_number: cargo.cargo_number,
+        orders: cargo.orders,
+      });
+
+      toast.success(`${response.data.cargo_number} is on delivery!`, {
+        autoClose: 5000,
+      });
+
+      setCargo(response.data);
+
+      console.log(response.data);
+    } catch (err) {
+      const errorMessage = err.response.data.error;
+
+      toast.error(errorMessage, {
+        autoClose: 5000,
+      });
     }
-
-    const response = await api.post("cargos/delivery", {
-      id: cargo.id,
-      cargo_number: cargo.cargo_number,
-      orders: cargo.orders,
-    });
-
-    console.log(response.data);
   }
 
   useEffect(() => {
@@ -208,7 +222,9 @@ function Delivery({ match }) {
             </Col>
             <Col>
               <LabelStyled>Vehicle Scanned: </LabelStyled>
-              {generateIconScanned(scanVehicle)}
+              {cargo.status === "ONDELIVERY"
+                ? generateIconScanned(true)
+                : generateIconScanned(scanVehicle)}
               <InputStyled
                 disabled
                 value={`${cargo.vehicle.license_plate} - ${cargo.vehicle.reference}`}
@@ -258,6 +274,7 @@ function Delivery({ match }) {
                   </InputGroupText>
                 </InputGroupAddon>
                 <Input
+                  disabled={isDisabled()}
                   autoFocus
                   name="scan"
                   onChange={handleChangeScan}
@@ -287,6 +304,7 @@ function Delivery({ match }) {
             >
               <TableContainer columns={columns} data={cargo.orders} />
               <Button
+                disabled={isDisabled()}
                 type="submit"
                 color="primary
               "

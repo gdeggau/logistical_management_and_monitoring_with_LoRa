@@ -7,6 +7,12 @@ class Order extends Model {
   static init(sequelize) {
     super.init(
       {
+        id: {
+          type: Sequelize.UUID,
+          allowNull: false,
+          defaultValue: Sequelize.UUIDV4,
+          primaryKey: true,
+        },
         order_number: Sequelize.STRING,
         quantity: Sequelize.INTEGER,
         freight: Sequelize.FLOAT,

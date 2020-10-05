@@ -18,10 +18,10 @@ export default function Header() {
   return (
     <Container>
       <Content>
-        <div>
+        {/* <div>
           <input placeholder="Type license plate..." />
           <button>Search</button>
-        </div>
+        </div> */}
         <nav>
           <FaSignOutAlt size={"15px"} color={"#fff"} />
           <Link to="/" onClick={handleClick}>

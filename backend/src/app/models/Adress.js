@@ -12,6 +12,9 @@ class Adress extends Model {
         district: Sequelize.STRING,
         city: Sequelize.STRING,
         state: Sequelize.STRING,
+        latitude: Sequelize.DECIMAL(9, 6),
+        longitude: Sequelize.DECIMAL(9, 6),
+        relevance: Sequelize.FLOAT,
       },
       {
         sequelize,

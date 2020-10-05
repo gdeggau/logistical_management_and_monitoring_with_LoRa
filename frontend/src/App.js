@@ -1,4 +1,5 @@
 import React from "react";
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { PersistGate } from "redux-persist/integration/react";
 import { ToastContainer } from "react-toastify";
 import { Provider } from "react-redux";

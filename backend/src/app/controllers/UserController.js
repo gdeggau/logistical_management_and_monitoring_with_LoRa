@@ -30,7 +30,7 @@ class UserController {
         state: Yup.string().required(),
       });
 
-      const { adress, ...user } = req.body;
+      let { adress, ...user } = req.body;
 
       if (!(await schemaUser.isValid(user))) {
         return res.status(400).json({ error: "User's validation fails" });
@@ -41,12 +41,16 @@ class UserController {
       // }
 
       transaction = await sequelizeInstance.connection.transaction();
-      const userExists = await User.findOne({ where: { email: user.email } });
+      const userExists = await User.findOne({
+        where: { email: user.email },
+        transaction,
+      });
 
       if (userExists) {
         return res.status(400).json({ error: "User already exists" });
       }
 
+      user.role = "CLIENT";
       userCreated = await User.create(user, { transaction });
       // adressCreated = await Adress.create(adress, { transaction });
 
@@ -85,7 +89,7 @@ class UserController {
 
       return res.json(useradress);
     } catch (err) {
-      // console.log(err);
+      console.log(err);
       if (transaction) await transaction.rollback();
       return res.status(400).json({
         error:

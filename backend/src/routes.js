@@ -29,20 +29,21 @@ const upload = multer(multerConfig);
 routes.post("/users", UserController.store);
 routes.post("/sessions", SessionController.store);
 
+routes.use("/teste", async (req, res, next) => {
+  console.log("Params:", req.params);
+  console.log("Request URL:", req.originalUrl);
+  console.log("Request Type:", req.method);
+  //   console.log("Requisição completa:", req);
+  console.log("Corpo da requisição:", req.body);
+  console.log("recebeu");
+  //   next();
+  return res.json({ message: "foi" });
+});
+
 //para todas as rotas abaixo será necessário ter o token no header da req.
 routes.use(authMiddleware);
 
 routes.put("/users", UserController.update);
-
-// routes.get("/teste", async (req, res) => {
-//   const { count } = await UserAdr.findAndCountAll({
-//     where: {
-//       user_id: "e98fb09f-0be3-4a1e-a9b6-387a85724dc4",
-//       main_adress: true,
-//     },
-//   });
-//   return res.json(count);
-// });
 
 routes.get("/employees", EmployeeController.index);
 routes.get("/orders/user", UserOrderController.index);
@@ -50,8 +51,6 @@ routes.get("/orders/user", UserOrderController.index);
 routes.get("/adresses/user", UserAdressesController.index);
 routes.get("/products", ProductController.index);
 
-routes.post("/devices", DeviceController.store);
-routes.post("/vehicles", VehicleController.store);
 routes.post("/adresses/user", UserAdressesController.store);
 routes.post("/products", ProductController.store);
 routes.post("/orders/user", UserOrderController.store);
@@ -61,9 +60,13 @@ routes.post("/files", upload.single("file"), FileController.store);
 routes.use(admin);
 routes.post("/cargos", CargoController.store);
 routes.post("/cargos/delivery", CargoDeliveryController.store);
+routes.post("/devices", DeviceController.store);
+routes.post("/vehicles", VehicleController.store);
 
 routes.get("/cargos", CargoController.index);
+routes.get("/cargos/delivery", CargoDeliveryController.index);
 routes.get("/orders", OrderController.index);
 routes.get("/vehicles", VehicleController.index);
 routes.get("/drivers", DriverController.index);
+routes.get("/devices", DeviceController.index);
 export default routes;

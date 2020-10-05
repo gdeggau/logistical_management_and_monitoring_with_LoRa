@@ -1,6 +1,8 @@
 import * as Yup from "yup";
+import mapboxConfig from "../../config/mapbox";
 import User from "../models/User";
 import Adress from "../models/Adress";
+import axios from "axios";
 
 import sequelizeInstance from "../../database/index";
 import UsersAdresses from "../models/UsersAdresses";
@@ -25,8 +27,33 @@ class UserAdressesController {
           .json({ error: "User address's validation fails" });
       }
 
+      const { number, district, city, state, address } = req.body;
+      const { access_token, country, base_url, geocoding } = mapboxConfig;
+
+      const responseMapbox = await axios.get(
+        `${base_url}${geocoding} ${address} ${district} ${city} ${state}.json`,
+        {
+          params: { access_token, country },
+        }
+      );
+
+      let latitude = 0;
+      let longitude = 0;
+      let relevance = "";
+
+      if (responseMapbox.data.features.length !== 0) {
+        latitude = responseMapbox.data.features[0].center[1];
+        longitude = responseMapbox.data.features[0].center[0];
+        relevance = responseMapbox.data.features[0].relevance;
+      }
+
+      req.body.latitude = latitude;
+      req.body.longitude = longitude;
+      req.body.relevance = relevance;
+
+      // console.log(req.body);
       transaction = await sequelizeInstance.connection.transaction();
-      const user = await User.findByPk(req.userId);
+      const user = await User.findByPk(req.userId, { transaction });
 
       const adressCreated = await Adress.create(req.body, { transaction });
 
@@ -35,12 +62,15 @@ class UserAdressesController {
           user_id: req.userId,
           main_adress: true,
         },
+        transaction,
       });
 
       await user.addAdresses(adressCreated, {
         through: { main_adress: count === 0 ? true : false },
         transaction,
       });
+
+      await transaction.commit();
 
       const userAdress = await User.findByPk(req.userId, {
         attributes: ["id", "name", "last_name", "telephone", "email", "role"],
@@ -65,15 +95,12 @@ class UserAdressesController {
             as: "options",
           },
         },
-        transaction,
       });
-
-      await transaction.commit();
 
       return res.json(userAdress);
     } catch (err) {
       console.log(err);
-      if (transaction) await transaction.rollback();
+      await transaction.rollback();
       return res.status(400).json({
         error:
           "An unexpected error occurred, please contact system administrator! ",

@@ -5,9 +5,11 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import path from "path";
+import localtunnel from "localtunnel";
 //importar o express-async-errors antes das rotas
 import "express-async-errors";
 import routes from "./routes";
+import { format } from "date-fns";
 import "./database";
 import Youch from "youch";
 import * as Sentry from "@sentry/node";
@@ -22,6 +24,7 @@ class App {
     this.middlewares();
     this.routes();
     this.exceptionHandler();
+    // this.tunnel();
   }
 
   middlewares() {
@@ -47,6 +50,21 @@ class App {
       }
 
       return res.status(500).json({ error: "Internal server error" });
+    });
+  }
+
+  async tunnel() {
+    const tunnel = await localtunnel({ port: 3333, subdomain: "deggautcc" });
+
+    // the public url for your tunnel
+    // https://sadgasg.localtunnel.me
+    tunnel.url;
+
+    tunnel.on("request", (info) => {
+      console.log(format(new Date(), "EEE MMM dd yyyy HH:mm:ss OOOO"), info);
+    });
+    tunnel.on("close", () => {
+      // tunnels are closed
     });
   }
 }

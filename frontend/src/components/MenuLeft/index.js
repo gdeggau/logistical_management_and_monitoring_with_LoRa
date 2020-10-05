@@ -2,7 +2,6 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-import "react-pro-sidebar/dist/css/styles.css";
 import { Menu, MenuItem } from "./styles";
 
 import avatar_default from "~/assets/avatar_default.svg";

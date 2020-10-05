@@ -17,8 +17,6 @@ function Address() {
       {
         Header: "Zip Code",
         accessor: "cep",
-        Filter: SelectColumnFilter,
-        filter: "equals",
       },
       {
         Header: "Street",
@@ -51,6 +49,8 @@ function Address() {
       {
         Header: "Main addres",
         accessor: ({ main_adress }) => main_adress.toString(),
+        Filter: SelectColumnFilter,
+        filter: "equals",
       },
       {
         Header: "Actions",

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import { FaTruck } from "react-icons/fa";
 import api from "~/services/api";
+import { SelectColumnFilter } from "~/components/Filter";
 import dateFormat from "~/utils/dateFormat";
 import { parseISO, isBefore, isAfter, subHours } from "date-fns";
 import TableContainer from "~/components/Table";
@@ -71,6 +72,8 @@ function Cargo() {
         Header: "Vehicle",
         accessor: ({ vehicle }) =>
           `${vehicle.license_plate} - ${vehicle.reference}`,
+        Filter: SelectColumnFilter,
+        filter: "equals",
       },
       {
         Header: "Orders",
@@ -93,6 +96,8 @@ function Cargo() {
       {
         Header: "Status",
         accessor: "status",
+        Filter: SelectColumnFilter,
+        filter: "equals",
       },
       {
         Header: "Observation",

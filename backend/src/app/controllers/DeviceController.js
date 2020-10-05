@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 import Device from "../models/Device";
+import Vehicle from "../models/Vehicle";
 
 class DeviceController {
   async store(req, res) {
@@ -23,6 +24,18 @@ class DeviceController {
     const { id, name, device_identifier } = await Device.create(req.body);
 
     return res.json({ id, name, device_identifier });
+  }
+
+  async index(req, res) {
+    const devices = await Device.findAll({
+      include: [
+        {
+          association: "vehicles",
+        },
+      ],
+    });
+
+    return res.json(devices);
   }
 
   // async show(req,res) {

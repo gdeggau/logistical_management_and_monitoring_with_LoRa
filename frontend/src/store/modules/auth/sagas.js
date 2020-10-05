@@ -50,7 +50,11 @@ export function* signUp({ payload }) {
 
     history.push("/");
   } catch (err) {
-    toast.error("Error when register, please check your data!");
+    const errorMessage = err.response.data.error;
+
+    toast.error(errorMessage, {
+      autoClose: 5000,
+    });
     yield put(signFailure());
   }
 }
