@@ -1,8 +1,6 @@
-"use strict";
-
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable("orders_history", {
+    return queryInterface.createTable('orders_history', {
       id: {
         type: Sequelize.UUID,
         allowNull: false,
@@ -11,16 +9,16 @@ module.exports = {
       },
       order_id: {
         type: Sequelize.UUID,
-        references: { model: "orders", key: "id" },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
+        references: { model: 'orders', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
         allowNull: false,
       },
 
       status: {
         type: Sequelize.STRING,
         allowNull: true,
-        defaultValue: "PENDING",
+        defaultValue: 'PENDING',
       },
       observation: {
         type: Sequelize.STRING,
@@ -37,7 +35,7 @@ module.exports = {
     });
   },
 
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("orders_history");
+  down: (queryInterface) => {
+    return queryInterface.dropTable('orders_history');
   },
 };

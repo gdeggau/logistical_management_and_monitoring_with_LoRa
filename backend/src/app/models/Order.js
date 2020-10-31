@@ -1,7 +1,7 @@
-import Sequelize, { Model } from "sequelize";
-import moment from "moment";
+import Sequelize, { Model } from 'sequelize';
+import moment from 'moment';
 
-import generateUuid from "../utils/generateUuid";
+import generateUuid from '../utils/generateUuid';
 
 class Order extends Model {
   static init(sequelize) {
@@ -23,7 +23,7 @@ class Order extends Model {
         barcode_scan: {
           type: Sequelize.VIRTUAL,
           get() {
-            return "RR" + this.id.split("-")[0].toUpperCase();
+            return `RR${this.id.split('-')[0].toUpperCase()}`;
           },
         },
       },
@@ -33,7 +33,7 @@ class Order extends Model {
     );
 
     generateUuid(this);
-    this.addHook("beforeCreate", async (order) => {
+    this.addHook('beforeCreate', async (order) => {
       order.order_number = moment().valueOf().toString();
     });
 
@@ -41,19 +41,20 @@ class Order extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.User, { foreignKey: "user_id", as: "user" });
-    this.belongsTo(models.Product, { foreignKey: "product_id", as: "product" });
+    this.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
+    this.belongsTo(models.Product, { foreignKey: 'product_id', as: 'product' });
     this.belongsTo(models.Adress, {
-      foreignKey: "delivery_adress_id",
-      as: "delivery_adress",
+      foreignKey: 'delivery_adress_id',
+      as: 'delivery_adress',
     });
     this.belongsToMany(models.Cargo, {
-      foreignKey: "order_id",
+      foreignKey: 'order_id',
       through: models.CargosOrders,
-      as: "cargos",
+      as: 'cargos',
     });
     this.hasMany(models.OrdersHistory, {
-      foreignKey: "order_id",
+      foreignKey: 'order_id',
+      // as: "orders_history",
     });
   }
 }

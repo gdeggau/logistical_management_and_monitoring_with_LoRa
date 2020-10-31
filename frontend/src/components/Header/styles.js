@@ -1,21 +1,33 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-import { darken } from "polished";
+import { darken } from 'polished';
 
 export const Container = styled.div`
-  background: var(--header);
+  background: var(--grayDark);
   padding: 0 30px;
+  /* height: 40px; */
 `;
 
 export const Content = styled.div`
   width: 100%;
-  height: 54px;
+  height: 50px;
+  /* padding-left: 260px; */
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   /* justify-content: right; */
   align-items: center;
 
   div {
+    padding-left: 200px;
+    nav {
+      ol {
+        background-color: rgba(255, 255, 255, 0.1);
+        margin: 0;
+      }
+    }
+  }
+
+  /* div {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -44,10 +56,10 @@ export const Content = styled.div`
       transition: background 0.2s;
 
       &:hover {
-        background: ${darken(0.08, "#77e7b2")};
+        background: ${darken(0.08, '#77e7b2')};
       }
     }
-  }
+  } */
 
   nav {
     display: flex;

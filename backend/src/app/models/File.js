@@ -1,9 +1,9 @@
-import Sequelize, { Model } from "sequelize";
+import Sequelize, { Model } from 'sequelize';
 
-import uuid from "uuid/v4";
+import uuid from 'uuid/v4';
 
 class File extends Model {
-  //o parametro sequelize é a conexão com o banco de dados
+  // o parametro sequelize é a conexão com o banco de dados
   static init(sequelize) {
     super.init(
       {
@@ -21,7 +21,7 @@ class File extends Model {
       }
     );
 
-    this.addHook("beforeCreate", async (file) => {
+    this.addHook('beforeCreate', async (file) => {
       file.id = uuid();
     });
 

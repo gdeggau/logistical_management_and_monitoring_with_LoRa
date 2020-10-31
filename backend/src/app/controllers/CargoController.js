@@ -1,18 +1,18 @@
-import * as Yup from "yup";
-import sequelizeInstance from "../../database/index";
+/* eslint-disable no-restricted-syntax */
+import * as Yup from 'yup';
+import { Op } from 'sequelize';
+import { parseISO, isBefore } from 'date-fns';
+import sequelizeInstance from '../../database/index';
 
-import Vehicle from "../models/Vehicle";
-import Cargo from "../models/Cargo";
-import User from "../models/User";
-import Order from "../models/Order";
-import OrdersHistory from "../models/OrdersHistory";
+import Vehicle from '../models/Vehicle';
+import Cargo from '../models/Cargo';
+import User from '../models/User';
+import Order from '../models/Order';
+// import VehiclesGeolocation from '../models/VehiclesGeolocation';
+import OrdersHistory from '../models/OrdersHistory';
 
-import StatusCargo from "../utils/EnumStatusCargo";
-import StatusOrder from "../utils/EnumStatusOrder";
-
-import { Op } from "sequelize";
-
-import { startOfHour, parseISO, isBefore } from "date-fns";
+import StatusCargo from '../utils/EnumStatusCargo';
+import StatusOrder from '../utils/EnumStatusOrder';
 
 class CargoController {
   async store(req, res) {
@@ -26,7 +26,7 @@ class CargoController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: "Validation fails!" });
+      return res.status(400).json({ error: 'Validation fails!' });
     }
 
     // const checkIsEmployee = await User.findOne({
@@ -39,10 +39,10 @@ class CargoController {
     // }
 
     const checkDriverIsEmployee = await User.findOne({
-      where: { id: req.body.driver_id, role: "DRIVER" },
+      where: { id: req.body.driver_id, role: 'DRIVER' },
     });
     if (!checkDriverIsEmployee) {
-      return res.status(400).json({ error: "User must be a driver!" });
+      return res.status(400).json({ error: 'User must be a driver!' });
     }
 
     const checkVehicleHasDevice = await Vehicle.findOne({
@@ -52,12 +52,12 @@ class CargoController {
     if (!checkVehicleHasDevice) {
       return res
         .status(400)
-        .json({ error: "Vehicle must have a device associated!" });
+        .json({ error: 'Vehicle must have a device associated!' });
     }
 
     const planDeliveryDateLeave = parseISO(req.body.plan_delivery_date_leave);
     if (isBefore(planDeliveryDateLeave, new Date())) {
-      return res.status(400).json({ error: "Past dates are not permited!" });
+      return res.status(400).json({ error: 'Past dates are not permited!' });
     }
 
     const planDeliveryDateReturn = parseISO(req.body.plan_delivery_date_return);
@@ -67,7 +67,7 @@ class CargoController {
     ) {
       return res
         .status(400)
-        .json({ error: "Return date must be after leave date!" });
+        .json({ error: 'Return date must be after leave date!' });
     }
 
     try {
@@ -149,12 +149,42 @@ class CargoController {
       );
 
       if (checkAvailabilityDriverOrVehicle) {
-        console.log(checkAvailabilityDriverOrVehicle);
         await transaction.rollback();
         return res.status(400).json({
           error:
-            "Driver or vehicle is already planned to do a delivery in that date.",
+            'Driver or vehicle is already planned to do a delivery in that date.',
         });
+      }
+
+      const checkDriverOrVehicleIsOnDelivery = await Cargo.findOne(
+        {
+          where: {
+            [Op.and]: [
+              {
+                [Op.or]: [
+                  {
+                    driver_id: req.body.driver_id,
+                  },
+                  {
+                    vehicle_id: req.body.vehicle_id,
+                  },
+                ],
+              },
+              {
+                status: StatusCargo.ONDELIVERY.value,
+              },
+            ],
+          },
+        },
+        { transaction }
+      );
+
+      if (checkDriverOrVehicleIsOnDelivery) {
+        await transaction.rollback();
+        return res.status(400).json({
+          error: 'Driver or vehicle is on delivery!',
+        });
+        // return res.json(checkAvailabilityDriverOrVehicle);
       }
 
       const cargo = await Cargo.create(
@@ -169,46 +199,65 @@ class CargoController {
         { transaction }
       );
 
-      await cargo.createCargosGeolocation(
-        {
-          status: StatusCargo.EMPTY.value,
-          observation: StatusCargo.EMPTY.description,
-          transaction,
-        },
-        { transaction }
-      );
+      // await cargo.createCargosGeolocation(
+      //   {
+      //     status: StatusCargo.EMPTY.value,
+      //     observation: StatusCargo.EMPTY.description,
+      //     transaction,
+      //   },
+      //   { transaction }
+      // );
+
+      // await VehiclesGeolocation.create(
+      //   {
+      //     vehicle_id: checkVehicleHasDevice.id,
+      //     cargo_id: cargo.id,
+      //     status: StatusCargo.EMPTY.value,
+      //     observation: StatusCargo.EMPTY.description,
+      //   },
+      //   { transaction }
+      // );
+
+      // await checkVehicleHasDevice.createVehiclesGeolocation(
+      //   {
+      //     cargo_id: cargo.id,
+      //     status: StatusCargo.EMPTY.value,
+      //     observation: StatusCargo.EMPTY.description,
+      //   },
+      //   { transaction }
+      // );
 
       const ordersIdsFromReq = req.body.orders;
-      if (!ordersIdsFromReq || ordersIdsFromReq.length == 0) {
+      if (!ordersIdsFromReq || ordersIdsFromReq.length === 0) {
         await transaction.commit();
         const cargoCreated = await Cargo.findByPk(cargo.id, {
           attributes: [
-            "id",
-            "cargo_number",
-            "plan_delivery_date_leave",
-            "plan_delivery_date_return",
-            "status",
-            "observation",
-            "createdAt",
+            'id',
+            'cargo_number',
+            'plan_delivery_date_leave',
+            'plan_delivery_date_return',
+            'status',
+            'observation',
+            'createdAt',
           ],
           include: [
             {
-              association: "driver",
-              attributes: ["id", "name", "last_name", "telephone", "email"],
+              association: 'driver',
+              attributes: ['id', 'name', 'last_name', 'telephone', 'email'],
             },
             {
-              association: "vehicle",
+              association: 'vehicle',
               attributes: [
-                "id",
-                "license_plate",
-                "model",
-                "brand",
-                "reference",
+                'id',
+                'license_plate',
+                'model',
+                'brand',
+                'reference',
               ],
               include: [
                 {
-                  association: "device",
-                  attributes: ["id", "name", "device_identifier"],
+                  association: 'device',
+                  attributes: ['id', 'name', 'device_identifier'],
                 },
               ],
             },
@@ -219,7 +268,7 @@ class CargoController {
 
       const ordersIds = [];
       ordersIdsFromReq.map((order) => {
-        ordersIds.push(order.id);
+        return ordersIds.push(order.id);
       });
 
       const ordersFromDB = await Order.findAll(
@@ -241,18 +290,16 @@ class CargoController {
         { transaction }
       );
 
-      console.log(ordersIds.length);
-      console.log(ordersFromDB.length);
-      if (ordersFromDB.length != ordersIds.length) {
+      if (ordersFromDB.length !== ordersIds.length) {
         await transaction.rollback();
         return res.status(400).json({
           error:
-            "There is one or more order already in a cargo, review your choices.",
+            'There is one or more order already in a cargo, review your choices.',
         });
       }
 
       await cargo.addOrders(ordersFromDB, {
-        as: "order_id",
+        as: 'order_id',
         through: { employee_id: req.userId, scanned: false },
         transaction,
       });
@@ -301,75 +348,95 @@ class CargoController {
         { transaction }
       );
 
-      await cargo.createCargosGeolocation(
-        {
-          status: StatusCargo.CLOSED.value,
-          observation: StatusCargo.CLOSED.description,
-        },
-        { transaction }
-      );
+      // await cargo.createCargosGeolocation(
+      //   {
+      //     status: StatusCargo.CLOSED.value,
+      //     observation: StatusCargo.CLOSED.description,
+      //   },
+      //   { transaction }
+      // );
+
+      // await checkVehicleHasDevice.createVehiclesGeolocation(
+      //   {
+      //     cargo_id: cargo.id,
+      //     status: StatusCargo.CLOSED.value,
+      //     observation: StatusCargo.CLOSED.description,
+      //     transaction,
+      //   },
+      //   { transaction }
+      // );
+
+      // await VehiclesGeolocation.create(
+      //   {
+      //     vehicle_id: checkVehicleHasDevice.id,
+      //     cargo_id: cargo.id,
+      //     status: StatusCargo.CLOSED.value,
+      //     observation: StatusCargo.CLOSED.description,
+      //   },
+      //   { transaction }
+      // );
 
       await transaction.commit();
 
       const cargoOrders = await Cargo.findByPk(cargo.id, {
         attributes: [
-          "id",
-          "cargo_number",
-          "plan_delivery_date_leave",
-          "plan_delivery_date_return",
-          "status",
-          "observation",
-          "createdAt",
+          'id',
+          'cargo_number',
+          'plan_delivery_date_leave',
+          'plan_delivery_date_return',
+          'status',
+          'observation',
+          'createdAt',
         ],
         include: [
           {
-            association: "driver",
-            attributes: ["id", "name", "last_name", "telephone", "email"],
+            association: 'driver',
+            attributes: ['id', 'name', 'last_name', 'telephone', 'email'],
           },
           {
-            association: "vehicle",
-            attributes: ["id", "license_plate", "model", "brand", "reference"],
+            association: 'vehicle',
+            attributes: ['id', 'license_plate', 'model', 'brand', 'reference'],
             include: [
               {
-                association: "device",
-                attributes: ["id", "name", "device_identifier"],
+                association: 'device',
+                attributes: ['id', 'name', 'device_identifier'],
               },
             ],
           },
           {
-            association: "orders",
+            association: 'orders',
             attributes: [
-              "id",
-              "order_number",
-              "quantity",
-              "freight",
-              "total_price",
-              "status",
+              'id',
+              'order_number',
+              'quantity',
+              'freight',
+              'total_price',
+              'status',
             ],
             through: {
-              attributes: ["scanned", "employee_id"],
-              as: "other_infos",
+              attributes: ['scanned', 'employee_id'],
+              as: 'other_infos',
             },
             include: [
               {
-                association: "product",
-                attributes: ["id", "name", "description"],
+                association: 'product',
+                attributes: ['id', 'name', 'description'],
               },
               {
-                association: "user",
-                attributes: ["id", "name", "last_name", "telephone", "email"],
+                association: 'user',
+                attributes: ['id', 'name', 'last_name', 'telephone', 'email'],
               },
               {
-                association: "delivery_adress",
+                association: 'delivery_adress',
                 attributes: [
-                  "id",
-                  "cep",
-                  "address",
-                  "number",
-                  "complement",
-                  "district",
-                  "city",
-                  "state",
+                  'id',
+                  'cep',
+                  'address',
+                  'number',
+                  'complement',
+                  'district',
+                  'city',
+                  'state',
                 ],
               },
             ],
@@ -382,7 +449,7 @@ class CargoController {
       await transaction.rollback();
       return res.status(400).json({
         error:
-          "An unexpected error occurred, please contact system administrator! ",
+          'An unexpected error occurred, please contact system administrator! ',
       });
     }
   }
@@ -398,80 +465,97 @@ class CargoController {
       const cargos = await Cargo.findAll({
         where: { cargo_number: filterCargoNumber },
         order: [
-          ["status", "ASC"],
-          ["plan_delivery_date_leave", "ASC"],
+          // ['status', 'ASC'],
+          ['delivery_date_return', 'DESC'],
+          ['delivery_date_leave', 'DESC'],
+          // ['plan_delivery_date_leave', 'DESC'],
         ],
         attributes: [
-          "id",
-          "cargo_number",
-          "plan_delivery_date_leave",
-          "plan_delivery_date_return",
-          "delivery_date_leave",
-          "delivery_date_return",
-          "status",
-          "observation",
-          "createdAt",
+          'id',
+          'cargo_number',
+          'plan_delivery_date_leave',
+          'plan_delivery_date_return',
+          'delivery_date_leave',
+          'delivery_date_return',
+          'status',
+          'observation',
+          'createdAt',
         ],
         include: [
           {
             model: User,
-            as: "driver",
-            attributes: ["name", "last_name", "telephone", "email"],
+            as: 'driver',
+            attributes: [
+              'name',
+              'last_name',
+              'full_name',
+              'telephone',
+              'email',
+            ],
           },
           {
             model: Vehicle,
-            as: "vehicle",
+            as: 'vehicle',
             attributes: [
-              "id",
-              "license_plate",
-              "barcode_scan",
-              "model",
-              "brand",
-              "reference",
+              'id',
+              'license_plate',
+              'barcode_scan',
+              'model',
+              'brand',
+              'reference',
             ],
             include: [
               {
-                association: "device",
-                attributes: ["id", "name", "device_identifier"],
+                association: 'device',
+                attributes: ['id', 'name', 'device_identifier'],
               },
             ],
           },
           {
             model: Order,
-            as: "orders",
+            as: 'orders',
             attributes: [
-              "id",
-              "order_number",
-              "barcode_scan",
-              "quantity",
-              "freight",
-              "total_price",
-              "status",
+              'id',
+              'order_number',
+              'barcode_scan',
+              'quantity',
+              'freight',
+              'total_price',
+              'status',
+              'observation',
+              'updated_at',
             ],
             through: {
-              attributes: ["scanned", "employee_id"],
-              as: "other_infos",
+              attributes: ['scanned', 'employee_id'],
+              as: 'other_infos',
             },
             include: [
               {
-                association: "product",
-                attributes: ["id", "name", "description"],
+                association: 'product',
+                attributes: ['id', 'name', 'description'],
               },
               {
-                association: "user",
-                attributes: ["id", "name", "last_name", "telephone", "email"],
-              },
-              {
-                association: "delivery_adress",
+                association: 'user',
                 attributes: [
-                  "id",
-                  "cep",
-                  "address",
-                  "number",
-                  "complement",
-                  "district",
-                  "city",
-                  "state",
+                  'id',
+                  'name',
+                  'last_name',
+                  'full_name',
+                  'telephone',
+                  'email',
+                ],
+              },
+              {
+                association: 'delivery_adress',
+                attributes: [
+                  'id',
+                  'cep',
+                  'address',
+                  'number',
+                  'complement',
+                  'district',
+                  'city',
+                  'state',
                 ],
               },
             ],
@@ -483,7 +567,233 @@ class CargoController {
       if (transaction) await transaction.rollback();
       return res.status(400).json({
         error:
-          "An unexpected error occurred, please contact system administrator! ",
+          'An unexpected error occurred, please contact system administrator! ',
+      });
+    }
+  }
+
+  async update(req, res) {
+    let transaction;
+
+    const schema = Yup.object().shape({
+      id: Yup.string().required(),
+      cargo_number: Yup.string().required(),
+      status: Yup.string().required(),
+      orders: Yup.array().of(
+        Yup.object().shape({
+          id: Yup.string().required(),
+          order_number: Yup.string().required(),
+          status: Yup.string().required(),
+        })
+      ),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validation fails!' });
+    }
+
+    try {
+      transaction = await sequelizeInstance.connection.transaction();
+
+      const cargo = await Cargo.findOne(
+        {
+          where: {
+            id: req.body.id,
+            cargo_number: req.body.cargo_number,
+          },
+        },
+        { transaction }
+      );
+
+      if (!(req.body.status in StatusCargo)) {
+        await transaction.rollback();
+        return res.status(400).json({
+          error: 'Invalid cargo status!',
+        });
+      }
+
+      if (!cargo) {
+        await transaction.rollback();
+        return res.status(400).json({
+          error: 'Cargo not found in database!',
+        });
+      }
+
+      let invalidStatus = false;
+      const ordersIds = [];
+      req.body.orders.map((order) => {
+        if (!(order.status in StatusOrder)) {
+          invalidStatus = true;
+        }
+        return ordersIds.push(order.id);
+      });
+
+      if (invalidStatus) {
+        await transaction.rollback();
+        return res.status(400).json({
+          error: 'Invalid order status!',
+        });
+      }
+
+      const cargoOrders = await cargo.getOrders(
+        {
+          where: {
+            id: {
+              [Op.in]: ordersIds,
+            },
+          },
+        },
+        { transaction }
+      );
+
+      if (cargoOrders.length !== (await cargo.countOrders({ transaction }))) {
+        await transaction.rollback();
+        return res.status(400).json({
+          error:
+            'There is one or more orders from this cargo missing in request!',
+        });
+      }
+
+      await cargo.update(
+        {
+          status: req.body.status,
+          observation: req.body.observation,
+          delivery_date_return:
+            req.body.status === StatusCargo.FINISHED.value ? new Date() : null,
+        },
+        { transaction }
+      );
+
+      const promises = [];
+      // const ordersUpdated = [];
+      for await (const order of req.body.orders) {
+        const orderUpdated = await Order.update(
+          {
+            status: order.status,
+            observation: order.observation,
+          },
+          {
+            where: {
+              id: order.id,
+            },
+            transaction,
+          }
+        );
+        await OrdersHistory.create(
+          {
+            order_id: order.id,
+            status: order.status,
+            observation: order.observation,
+          },
+          { transaction }
+        );
+        // ordersUpdated.push(orderUpdated);
+        promises.push(orderUpdated);
+      }
+      await Promise.all(promises);
+
+      // const promises2 = [];
+      // await Promise.all(promises);
+      // for await (const orderToBeInsertHistory of ordersUpdated) {
+      //   const orderHistInserted = await orderToBeInsertHistory.createOrdersHistory(
+      //     {
+      //       status: orderToBeInsertHistory.status,
+      //       observation: orderToBeInsertHistory.observation,
+      //     },
+      //     { transaction }
+      //   );
+
+      //   promises2.push(orderHistInserted);
+      // }
+
+      // await Promise.all(promises2);
+
+      await transaction.commit();
+      const cargoResult = await Cargo.findByPk(cargo.id, {
+        attributes: [
+          'id',
+          'cargo_number',
+          'plan_delivery_date_leave',
+          'plan_delivery_date_return',
+          'status',
+          'observation',
+          'createdAt',
+        ],
+        include: [
+          {
+            association: 'driver',
+            attributes: [
+              'id',
+              'name',
+              'last_name',
+              'telephone',
+              'email',
+              'full_name',
+            ],
+          },
+          {
+            association: 'vehicle',
+            attributes: ['id', 'license_plate', 'model', 'brand', 'reference'],
+            include: [
+              {
+                association: 'device',
+                attributes: ['id', 'name', 'device_identifier'],
+              },
+            ],
+          },
+          {
+            association: 'orders',
+            attributes: [
+              'id',
+              'order_number',
+              'quantity',
+              'freight',
+              'total_price',
+              'status',
+              'observation',
+              'updatedAt',
+            ],
+            through: {
+              attributes: ['scanned', 'employee_id'],
+              as: 'other_infos',
+            },
+            include: [
+              {
+                association: 'product',
+                attributes: ['id', 'name', 'description'],
+              },
+              {
+                association: 'user',
+                attributes: ['id', 'name', 'last_name', 'telephone', 'email'],
+              },
+              {
+                association: 'delivery_adress',
+                attributes: [
+                  'id',
+                  'cep',
+                  'address',
+                  'number',
+                  'complement',
+                  'district',
+                  'city',
+                  'state',
+                  'latitude',
+                  'longitude',
+                  'relevance',
+                ],
+              },
+            ],
+          },
+        ],
+      });
+
+      return res.json(cargoResult);
+    } catch (err) {
+      console.log(err);
+      await transaction.rollback();
+      return res.status(400).json({
+        error:
+          'An unexpected error occurred, please contact system administrator! ',
       });
     }
   }

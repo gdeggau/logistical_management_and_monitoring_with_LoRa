@@ -1,19 +1,19 @@
-import Sequelize from "sequelize";
-import cls from "cls-hooked";
-import databaseConfig from "../config/database";
+import Sequelize from 'sequelize';
+import mongoose from 'mongoose';
+import databaseConfig from '../config/database';
 
-import User from "../app/models/User";
-import File from "../app/models/File";
-import Device from "../app/models/Device";
-import Vehicle from "../app/models/Vehicle";
-import Adress from "../app/models/Adress";
-import UsersAdresses from "../app/models/UsersAdresses";
-import Product from "../app/models/Product";
-import Order from "../app/models/Order";
-import Cargo from "../app/models/Cargo";
-import CargosGeolocation from "../app/models/CargosGeolocation";
-import CargosOrders from "../app/models/CargosOrders";
-import OrdersHistory from "../app/models/OrdersHistory";
+import User from '../app/models/User';
+import File from '../app/models/File';
+import Device from '../app/models/Device';
+import Vehicle from '../app/models/Vehicle';
+import Adress from '../app/models/Adress';
+import UsersAdresses from '../app/models/UsersAdresses';
+import Product from '../app/models/Product';
+import Order from '../app/models/Order';
+import Cargo from '../app/models/Cargo';
+import VehiclesGeolocation from '../app/models/VehiclesGeolocation';
+import CargosOrders from '../app/models/CargosOrders';
+import OrdersHistory from '../app/models/OrdersHistory';
 
 const models = [
   User,
@@ -25,7 +25,7 @@ const models = [
   Product,
   Order,
   Cargo,
-  CargosGeolocation,
+  VehiclesGeolocation,
   CargosOrders,
   OrdersHistory,
 ];
@@ -33,6 +33,7 @@ const models = [
 class Database {
   constructor() {
     this.init();
+    this.mongo();
   }
 
   init() {
@@ -45,6 +46,14 @@ class Database {
       .map(
         (model) => model.associate && model.associate(this.connection.models)
       );
+  }
+
+  mongo() {
+    this.mongoConnection = mongoose.connect('mongodb://localhost:27017/tcc', {
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+      useFindAndModify: true,
+    });
   }
 }
 

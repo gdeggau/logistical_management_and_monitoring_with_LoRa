@@ -1,25 +1,49 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import capitalizeFirstLetter from '~/utils/capitalizeFirstLetter';
+import { Menu, MenuItem } from './styles';
 
-import { Menu, MenuItem } from "./styles";
-
-import avatar_default from "~/assets/avatar_default.svg";
+import avatar_default from '~/assets/avatar_default.svg';
 
 const pages = [
-  "catalog",
-  "users",
-  "address",
-  "vehicle",
-  "device",
-  "product",
-  "cargo",
-  "monitoring",
+  {
+    page: 'adresses',
+    isAdmin: false,
+  },
+  {
+    page: 'cargos',
+    isAdmin: true,
+  },
+  {
+    page: 'catalog',
+    isAdmin: false,
+  },
+  {
+    page: 'devices',
+    isAdmin: true,
+  },
+  {
+    page: 'monitoring',
+    isAdmin: true,
+  },
+  {
+    page: 'orders',
+    isAdmin: false,
+  },
+  {
+    page: 'products',
+    isAdmin: true,
+  },
+  {
+    page: 'users',
+    isAdmin: true,
+  },
+  {
+    page: 'vehicles',
+    isAdmin: true,
+  },
 ];
-
-function capitalizeFirstLetter(str1) {
-  return str1.charAt(0).toUpperCase() + str1.slice(1);
-}
 
 export default function MenuLeft() {
   const profile = useSelector((state) => state.user.profile);
@@ -35,15 +59,25 @@ export default function MenuLeft() {
           }
           alt={`${profile.name} ${profile.last_name}`}
         />
-        <Link to="profile">{`${profile.name} ${profile.last_name}`}</Link>
+        <Link to="/profile">{`${profile.name} ${profile.last_name}`}</Link>
       </div>
       <ul>
         {pages.map((page) => {
-          return (
-            <Link to={`/${page}`} key={page}>
-              <MenuItem>{capitalizeFirstLetter(page)}</MenuItem>
-            </Link>
-          );
+          if (profile.role === 'ADMIN') {
+            return (
+              <Link to={`/${page.page}`} key={page.page}>
+                <MenuItem>{capitalizeFirstLetter(page.page)}</MenuItem>
+              </Link>
+            );
+          }
+          if (profile.role !== 'ADMIN' && !page.isAdmin) {
+            return (
+              <Link to={`/${page.page}`} key={page.page}>
+                <MenuItem>{capitalizeFirstLetter(page.page)}</MenuItem>
+              </Link>
+            );
+          }
+          return null;
         })}
       </ul>
     </Menu>

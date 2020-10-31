@@ -1,5 +1,5 @@
-import Sequelize, { Model } from "sequelize";
-import generateUuid from "../utils/generateUuid";
+import Sequelize, { Model } from 'sequelize';
+import generateUuid from '../utils/generateUuid';
 
 class CargosOrders extends Model {
   static init(sequelize) {
@@ -15,7 +15,7 @@ class CargosOrders extends Model {
       },
       {
         sequelize,
-        tableName: "cargos_orders",
+        tableName: 'cargos_orders',
       }
     );
 
@@ -25,7 +25,7 @@ class CargosOrders extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.User, { foreignKey: "employee_id", as: "employee" });
+    this.belongsTo(models.User, { foreignKey: 'employee_id', as: 'employee' });
   }
 }
 

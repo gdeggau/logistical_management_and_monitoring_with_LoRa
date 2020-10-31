@@ -1,17 +1,27 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 import {
   useTable,
   useSortBy,
   useFilters,
   usePagination,
   useRowSelect,
-} from "react-table";
-import { Filter, DefaultColumnFilter } from "~/components/Filter";
-import { Table, Row, Col, Button, Input, CustomInput } from "reactstrap";
+} from 'react-table';
+import { Table, Row, Col, Button, Input, CustomInput } from 'reactstrap';
 
-import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
+import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
+import { Filter, DefaultColumnFilter } from '~/components/Filter';
 
-const TableContainer = ({ columns, data, setSelectedRows, ...table_props }) => {
+// const defaultPropGetter = () => ({});
+
+const TableContainer = ({
+  columns,
+  data,
+  setSelectedRows,
+  // getColumnProps = defaultPropGetter,
+  // getRowProps = defaultPropGetter,
+  // getCellProps = defaultPropGetter,
+  ...table_props
+}) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -59,7 +69,7 @@ const TableContainer = ({ columns, data, setSelectedRows, ...table_props }) => {
         <AiFillCaretUp color="#fff" />
       )
     ) : (
-      ""
+      ''
     );
   };
 
@@ -79,7 +89,7 @@ const TableContainer = ({ columns, data, setSelectedRows, ...table_props }) => {
           dark
           hover
           responsive
-          style={{ background: "#262834" }}
+          style={{ background: '#343a40' }}
           {...table_props}
           {...getTableProps()}
         >
@@ -89,10 +99,10 @@ const TableContainer = ({ columns, data, setSelectedRows, ...table_props }) => {
                 {headerGroup.headers.map((column) => (
                   <th
                     {...column.getHeaderProps()}
-                    style={{ verticalAlign: "text-top" }}
+                    style={{ verticalAlign: 'text-top' }}
                   >
                     <div {...column.getSortByToggleProps()}>
-                      {column.render("Header")}
+                      {column.render('Header')}
                       {generateSortingIndicator(column)}
                     </div>
                     <Filter column={column} />
@@ -101,7 +111,6 @@ const TableContainer = ({ columns, data, setSelectedRows, ...table_props }) => {
               </tr>
             ))}
           </thead>
-
           <tbody {...getTableBodyProps()}>
             {page.map((row) => {
               prepareRow(row);
@@ -111,9 +120,9 @@ const TableContainer = ({ columns, data, setSelectedRows, ...table_props }) => {
                     return (
                       <td
                         {...cell.getCellProps()}
-                        style={{ verticalAlign: "middle" }}
+                        style={{ verticalAlign: 'middle' }}
                       >
-                        {cell.render("Cell")}
+                        {cell.render('Cell')}
                       </td>
                     );
                   })}
@@ -124,13 +133,14 @@ const TableContainer = ({ columns, data, setSelectedRows, ...table_props }) => {
         </Table>
       );
     }
+    return null;
   }
 
   return (
     <>
       {generateTable()}
       {/* {selectedFlatRows.map((d) => console.log(d.original))} */}
-      <Row style={{ maxWidth: 700, margin: "0 auto", textAlign: "center" }}>
+      <Row style={{ maxWidth: 700, margin: '0 auto', textAlign: 'center' }}>
         <Col md={3}>
           <Button
             color="primary"
@@ -138,7 +148,7 @@ const TableContainer = ({ columns, data, setSelectedRows, ...table_props }) => {
             onClick={() => gotoPage(0)}
             disabled={!canPreviousPage}
           >
-            {"<<"}
+            {'<<'}
           </Button>
           <Button
             color="primary"
@@ -146,11 +156,11 @@ const TableContainer = ({ columns, data, setSelectedRows, ...table_props }) => {
             onClick={previousPage}
             disabled={!canPreviousPage}
           >
-            {"<"}
+            {'<'}
           </Button>
         </Col>
-        <Col md={2} style={{ marginTop: 7, color: "#fff" }}>
-          Page{" "}
+        <Col md={2} style={{ marginTop: 7, color: '#fff' }}>
+          Page{' '}
           <strong>
             {pageIndex + 1} of {pageOptions.length}
           </strong>
@@ -188,7 +198,7 @@ const TableContainer = ({ columns, data, setSelectedRows, ...table_props }) => {
             onClick={nextPage}
             disabled={!canNextPage}
           >
-            {">"}
+            {'>'}
           </Button>
           <Button
             color="primary"
@@ -196,7 +206,7 @@ const TableContainer = ({ columns, data, setSelectedRows, ...table_props }) => {
             onClick={() => gotoPage(pageCount - 1)}
             disabled={!canNextPage}
           >
-            {">>"}
+            {'>>'}
           </Button>
         </Col>
       </Row>

@@ -1,15 +1,13 @@
-"use strict";
-
 module.exports = {
-  up: (queryInterface, Sequelize) => {
+  up: (queryInterface) => {
     return queryInterface.removeConstraint(
-      "products",
-      "products_description_key"
+      'products',
+      'products_description_key'
     );
   },
 
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.changeColumn("products", "description", {
+  down: (queryInterface) => {
+    return queryInterface.changeColumn('products', 'description', {
       unique: true,
     });
   },

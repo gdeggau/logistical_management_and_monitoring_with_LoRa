@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
-import logo from "~/assets/lora_logo.png";
-import api from "~/services/api";
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import {
   Container,
   Row,
@@ -20,7 +18,9 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-} from "reactstrap";
+} from 'reactstrap';
+import logo from '~/assets/placeholder.png';
+import api from '~/services/api';
 
 const freight = Math.floor(Math.random() * (40 - 0 + 1) + 0);
 
@@ -32,15 +32,15 @@ function Catalog() {
   const [total, setTotal] = useState();
 
   const toggle = (prod) => {
-    setModal({ modal: !modal, prod: prod });
+    setModal({ modal: !modal, prod });
     setTotal(Number(prod.price) + freight);
   };
 
   useEffect(() => {
     async function loadProducts() {
       const [products, adresses] = await Promise.all([
-        api.get("/products"),
-        api.get("/adresses/user"),
+        api.get('/products'),
+        api.get('/adresses/user'),
       ]);
 
       const mainAddress = adresses.data.adresses.find(
@@ -64,12 +64,12 @@ function Catalog() {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    const quantity = new FormData(event.target).get("quantity");
+    const quantity = new FormData(event.target).get('quantity');
 
     try {
       // toggle();
 
-      const response = await api.post("/orders/user", {
+      const response = await api.post('/orders/user', {
         product_id: prod.id,
         quantity: Number(quantity),
         freight,
@@ -91,7 +91,7 @@ function Catalog() {
   }
 
   function renderModal(product) {
-    if (prod !== null && address !== undefined) {
+    if (prod !== null) {
       return (
         <Modal isOpen={modal} toggle={toggle}>
           <Form onSubmit={handleSubmit}>
@@ -99,17 +99,17 @@ function Catalog() {
               You are finishing your purchase...
             </ModalHeader>
             <ModalBody>
-              <Container fluid={true}>
+              <Container fluid>
                 <Row>
                   <Col>
                     <img width="100%" src={logo} alt="Product" />
                   </Col>
                   <Col>
-                    <span style={{ fontWeight: "bold" }}>{product.name}</span>
+                    <span style={{ fontWeight: 'bold' }}>{product.name}</span>
                     <br />
                     <span>{product.description}</span>
 
-                    <div style={{ marginTop: "10px" }}>
+                    <div style={{ marginTop: '10px' }}>
                       <Row>
                         <Col>
                           <span>Individual:</span>
@@ -128,7 +128,7 @@ function Catalog() {
                       </Row>
                       <Row className="align-items-center">
                         <Col>
-                          <span style={{ fontWeight: "bold" }}>Quantity:</span>
+                          <span style={{ fontWeight: 'bold' }}>Quantity:</span>
                         </Col>
                         <Col>
                           <Input
@@ -139,7 +139,7 @@ function Catalog() {
                             style={{
                               width: 60,
                               border: 0,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                             defaultValue={1}
                             onChange={(event) =>
@@ -152,66 +152,86 @@ function Catalog() {
                   </Col>
                 </Row>
               </Container>
-              <Container style={{ marginTop: "20px" }} fluid={true}>
+
+              <Container style={{ marginTop: '20px' }} fluid>
                 <Row
                   style={{
-                    backgroundColor: "#f5f5f5",
-                    padding: "15px 0",
-                    marginBottom: "10px",
+                    backgroundColor: '#f5f5f5',
+                    padding: '15px 0',
+                    marginBottom: '10px',
                   }}
                 >
                   <Col>
                     <span>Main address</span>
                   </Col>
                   <Col>
-                    <Link to={"/address"}>Edit your adresses</Link>
+                    <Link to="/adresses">Edit your adresses</Link>
                   </Col>
                 </Row>
-                <Row>
-                  <Col>
-                    <span style={{ fontWeight: "bold" }}>{profile.name}</span>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <span>{`${address.address}, ${address.number} - ${address.district}`}</span>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <span>{`${address.complement}`}</span>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <span>{`${address.cep} | ${address.city} - ${address.state}`}</span>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <span>{`${
-                      profile.telephone ? profile.telephone : ""
-                    }`}</span>
-                  </Col>
-                </Row>
+                {address !== undefined && (
+                  <>
+                    <Row>
+                      <Col>
+                        <span style={{ fontWeight: 'bold' }}>
+                          {profile.name}
+                        </span>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <span>{`${address.address}, ${address.number} - ${address.district}`}</span>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <span>{`${address.complement}`}</span>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <span>{`${address.cep} | ${address.city} - ${address.state}`}</span>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <span>{`${
+                          profile.telephone ? profile.telephone : ''
+                        }`}</span>
+                      </Col>
+                    </Row>
+                  </>
+                )}
+                {!address && (
+                  <Row>
+                    <Col>
+                      <span
+                        className="text-warning"
+                        style={{ fontWeight: 'bold' }}
+                      >
+                        You need first create an address!
+                      </span>
+                    </Col>
+                  </Row>
+                )}
               </Container>
             </ModalBody>
-            <ModalFooter style={{ justifyContent: "space-between" }}>
+            <ModalFooter style={{ justifyContent: 'space-between' }}>
               <span
                 style={{
-                  fontWeight: "bold",
-                  fontSize: "18px",
-                  padding: "10px 35px",
-                  backgroundColor: "#f5f5f5",
+                  fontWeight: 'bold',
+                  fontSize: '18px',
+                  padding: '10px 35px',
+                  backgroundColor: '#f5f5f5',
                 }}
               >{`Total: R$ ${total}`}</span>
               <Button
+                disabled={!address}
                 color="primary"
                 type="submit"
                 onClick={() => toggle(prod)}
               >
                 Purchase
-              </Button>{" "}
+              </Button>{' '}
             </ModalFooter>
           </Form>
         </Modal>
@@ -230,19 +250,19 @@ function Catalog() {
                 lg={3}
                 md={4}
                 key={prod.id}
-                style={{ marginTop: "15px" }}
+                style={{ marginTop: '15px' }}
               >
                 <Card
                   onClick={() => toggle(prod)}
-                  style={{ cursor: "pointer" }}
+                  style={{ cursor: 'pointer' }}
                 >
-                  <CardImg top src={logo} alt="PS4" />
+                  <CardImg top src={logo} />
                   <CardBody>
                     <CardTitle>{prod.name}</CardTitle>
                     <CardText>{prod.description}</CardText>
                     <CardText
                       style={{
-                        fontWeight: "bold",
+                        fontWeight: 'bold',
                       }}
                     >{`R$ ${prod.price}`}</CardText>
                     {/* <Button size="sm">Purchase</Button> */}
@@ -259,7 +279,7 @@ function Catalog() {
     return <div>Loading...</div>;
   }
 
-  return <Container fluid={true}>{renderCatalog()}</Container>;
+  return <Container fluid>{renderCatalog()}</Container>;
 }
 
 export default Catalog;

@@ -1,11 +1,11 @@
-import * as Yup from "yup";
-import mapboxConfig from "../../config/mapbox";
-import User from "../models/User";
-import Adress from "../models/Adress";
-import axios from "axios";
-
-import sequelizeInstance from "../../database/index";
-import UsersAdresses from "../models/UsersAdresses";
+import * as Yup from 'yup';
+import axios from 'axios';
+import { Op } from 'sequelize';
+import mapboxConfig from '../../config/mapbox';
+import User from '../models/User';
+import Adress from '../models/Adress';
+import sequelizeInstance from '../../database/index';
+import UsersAdresses from '../models/UsersAdresses';
 
 class UserAdressesController {
   async store(req, res) {
@@ -19,6 +19,7 @@ class UserAdressesController {
         district: Yup.string().required(),
         city: Yup.string().required(),
         state: Yup.string().required(),
+        main_adress: Yup.boolean().required(),
       });
 
       if (!(await schemaAddress.isValid(req.body))) {
@@ -39,7 +40,7 @@ class UserAdressesController {
 
       let latitude = 0;
       let longitude = 0;
-      let relevance = "";
+      let relevance = '';
 
       if (responseMapbox.data.features.length !== 0) {
         latitude = responseMapbox.data.features[0].center[1];
@@ -57,42 +58,48 @@ class UserAdressesController {
 
       const adressCreated = await Adress.create(req.body, { transaction });
 
-      const { count } = await UsersAdresses.findAndCountAll({
-        where: {
-          user_id: req.userId,
-          main_adress: true,
-        },
-        transaction,
-      });
+      if (req.body.main_adress) {
+        await UsersAdresses.update(
+          {
+            main_adress: false,
+          },
+          {
+            where: {
+              user_id: req.userId,
+            },
+            transaction,
+          }
+        );
+      }
 
       await user.addAdresses(adressCreated, {
-        through: { main_adress: count === 0 ? true : false },
+        through: { main_adress: req.body.main_adress },
         transaction,
       });
 
       await transaction.commit();
 
       const userAdress = await User.findByPk(req.userId, {
-        attributes: ["id", "name", "last_name", "telephone", "email", "role"],
-        joinTableAttributes: ["main_adress", "delivery_adress"],
+        attributes: ['id', 'name', 'last_name', 'telephone', 'email', 'role'],
+        joinTableAttributes: ['main_adress', 'delivery_adress'],
         include: {
-          association: "adresses",
+          association: 'adresses',
           attributes: [
-            "id",
-            "cep",
-            "address",
-            "number",
-            "complement",
-            "district",
-            "city",
-            "state",
+            'id',
+            'cep',
+            'address',
+            'number',
+            'complement',
+            'district',
+            'city',
+            'state',
           ],
           where: {
             id: adressCreated.id,
           },
           through: {
-            attributes: ["main_adress", "delivery_adress", "active"],
-            as: "options",
+            attributes: ['main_adress', 'delivery_adress', 'active'],
+            as: 'options',
           },
         },
       });
@@ -103,38 +110,153 @@ class UserAdressesController {
       await transaction.rollback();
       return res.status(400).json({
         error:
-          "An unexpected error occurred, please contact system administrator! ",
+          'An unexpected error occurred, please contact system administrator! ',
       });
     }
   }
 
   async index(req, res) {
-    // const { page = 1 } = req.query;
+    const { address_id } = req.query;
     const adresses = await User.findByPk(req.userId, {
-      attributes: ["id", "name", "last_name", "telephone", "email", "role"],
-      limit: 20,
-      // offset: (page - 1) * 20,
+      where: { active: true },
+      attributes: ['id', 'name', 'last_name', 'telephone', 'email', 'role'],
       include: {
         model: Adress,
-        as: "adresses",
+        as: 'adresses',
+        where: {
+          id: address_id || { [Op.ne]: null },
+        },
+        order: ['updated_at', 'ASC'],
         attributes: [
-          "id",
-          "cep",
-          "address",
-          "number",
-          "complement",
-          "district",
-          "city",
-          "state",
+          'id',
+          'cep',
+          'address',
+          'number',
+          'complement',
+          'district',
+          'city',
+          'state',
+          'updated_at',
         ],
         through: {
-          attributes: ["main_adress", "active"],
-          as: "options",
+          attributes: ['main_adress', 'active'],
+          as: 'options',
         },
       },
     });
 
     return res.json(adresses);
+  }
+
+  async update(req, res) {
+    let transaction;
+    try {
+      const schemaAddress = Yup.object().shape({
+        id: Yup.string().required(),
+        number: Yup.number().required(),
+        complement: Yup.string().notRequired(),
+        main_adress: Yup.boolean().required(),
+      });
+
+      if (!(await schemaAddress.isValid(req.body))) {
+        return res
+          .status(400)
+          .json({ error: "User address's validation fails" });
+      }
+
+      transaction = await sequelizeInstance.connection.transaction();
+      const address = await UsersAdresses.findOne(
+        {
+          where: {
+            adress_id: req.body.id,
+            user_id: req.userId,
+          },
+        },
+        { transaction }
+      );
+
+      if (!address) {
+        return res.status(400).json({ error: 'No address was found!' });
+      }
+
+      await Adress.update(
+        {
+          number: req.body.number,
+          complement: req.body.complement,
+        },
+        {
+          where: {
+            id: req.body.id,
+          },
+          transaction,
+        }
+      );
+
+      console.log(typeof req.body.main_adress);
+      console.log(req.body.main_adress);
+      if (req.body.main_adress) {
+        await UsersAdresses.update(
+          {
+            main_adress: false,
+          },
+          {
+            where: {
+              user_id: req.userId,
+            },
+            transaction,
+          }
+        );
+      }
+
+      await UsersAdresses.update(
+        {
+          main_adress: req.body.main_adress,
+        },
+        {
+          where: {
+            adress_id: req.body.id,
+            user_id: req.userId,
+          },
+          transaction,
+        }
+      );
+
+      await transaction.commit();
+
+      const userAdress = await User.findByPk(req.userId, {
+        attributes: ['id', 'name', 'last_name', 'telephone', 'email', 'role'],
+        joinTableAttributes: ['main_adress', 'delivery_adress'],
+        include: {
+          association: 'adresses',
+          attributes: [
+            'id',
+            'cep',
+            'address',
+            'number',
+            'complement',
+            'district',
+            'city',
+            'state',
+          ],
+          where: {
+            id: req.body.id,
+          },
+          through: {
+            attributes: ['main_adress', 'delivery_adress', 'active'],
+            as: 'options',
+          },
+        },
+      });
+
+      return res.json(userAdress);
+    } catch (err) {
+      console.log(err);
+      await transaction.rollback();
+      return res.status(400).json({
+        error:
+          'An unexpected error occurred, please contact system administrator! ',
+      });
+    }
   }
 }
 

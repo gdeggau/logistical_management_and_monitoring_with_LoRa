@@ -1,8 +1,11 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Container = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   align-self: center;
-  margin-bottom: 30px;
+  margin-bottom: 5px;
 
   label {
     cursor: pointer;

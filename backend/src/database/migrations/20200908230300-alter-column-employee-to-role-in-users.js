@@ -1,11 +1,9 @@
-"use strict";
-
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    return queryInterface.renameColumn("users", "employee", "role");
+  up: (queryInterface) => {
+    return queryInterface.renameColumn('users', 'employee', 'role');
   },
 
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.renameColumn("users", "role", "employee");
+  down: (queryInterface) => {
+    return queryInterface.renameColumn('users', 'role', 'employee');
   },
 };

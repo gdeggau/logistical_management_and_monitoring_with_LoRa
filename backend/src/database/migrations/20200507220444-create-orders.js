@@ -1,8 +1,6 @@
-"use strict";
-
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable("orders", {
+    return queryInterface.createTable('orders', {
       id: {
         type: Sequelize.UUID,
         allowNull: false,
@@ -16,16 +14,16 @@ module.exports = {
       },
       user_id: {
         type: Sequelize.UUID,
-        references: { model: "users", key: "id" },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
+        references: { model: 'users', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
         allowNull: false,
       },
       product_id: {
         type: Sequelize.UUID,
-        references: { model: "products", key: "id" },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
+        references: { model: 'products', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
         allowNull: false,
       },
       quantity: {
@@ -43,9 +41,9 @@ module.exports = {
       },
       delivery_adress_id: {
         type: Sequelize.UUID,
-        references: { model: "adresses", key: "id" },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
+        references: { model: 'adresses', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
         allowNull: false,
       },
       observation: {
@@ -59,11 +57,7 @@ module.exports = {
       status: {
         type: Sequelize.STRING,
         allowNull: true,
-        defaultValue: "PENDING",
-      },
-      observation: {
-        type: Sequelize.STRING,
-        allowNull: true,
+        defaultValue: 'PENDING',
       },
       created_at: {
         type: Sequelize.DATE,
@@ -76,7 +70,7 @@ module.exports = {
     });
   },
 
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("orders");
+  down: (queryInterface) => {
+    return queryInterface.dropTable('orders');
   },
 };

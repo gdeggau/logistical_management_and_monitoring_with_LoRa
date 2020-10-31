@@ -1,11 +1,9 @@
-"use strict";
-
-const { Sequelize } = require("sequelize");
+const { Sequelize } = require('sequelize');
 
 module.exports = {
-  up: (queryInterface, Sequelize) => {
+  up: (queryInterface) => {
     return Promise.all([
-      queryInterface.changeColumn("users", "role", {
+      queryInterface.changeColumn('users', 'role', {
         type: Sequelize.STRING,
         allowNull: false,
       }),
@@ -14,7 +12,7 @@ module.exports = {
 
   down: (queryInterface) => {
     return Promise.all([
-      queryInterface.changeColumn("users", "role", {
+      queryInterface.changeColumn('users', 'role', {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false,

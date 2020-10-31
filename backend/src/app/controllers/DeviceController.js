@@ -1,16 +1,20 @@
-import * as Yup from "yup";
-import Device from "../models/Device";
-import Vehicle from "../models/Vehicle";
+import * as Yup from 'yup';
+import Device from '../models/Device';
 
 class DeviceController {
   async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
-      device_identifier: Yup.string().notRequired(),
+      label: Yup.string().required(),
+      device_identifier: Yup.string()
+        .required('Device EUI is required')
+        .min(16, 'DevEUI must be a 8 bytes hex!')
+        .max(16, 'DevEUI must be a 8 bytes hex!'),
+      description: Yup.string().notRequired(),
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: "Validation fail" });
+      return res.status(400).json({ error: 'Validation fail' });
     }
 
     const deviceExists = await Device.findOne({
@@ -18,19 +22,22 @@ class DeviceController {
     });
 
     if (deviceExists) {
-      return res.status(400).json({ error: "Device already exists" });
+      return res.status(400).json({ error: 'Device already exists' });
     }
 
-    const { id, name, device_identifier } = await Device.create(req.body);
+    const device = await Device.create(req.body);
 
-    return res.json({ id, name, device_identifier });
+    return res.json(device);
   }
 
   async index(req, res) {
     const devices = await Device.findAll({
+      where: {
+        active: true,
+      },
       include: [
         {
-          association: "vehicles",
+          association: 'vehicles',
         },
       ],
     });

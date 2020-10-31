@@ -1,26 +1,27 @@
-require("dotenv/config");
+require('dotenv/config');
 
 module.exports = {
-  dialect: "postgres",
+  dialect: 'postgres',
   host: process.env.DB_HOST,
   username: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
+  logging: false,
   define: {
     timestamps: true,
     underscored: true,
     underscoredAll: true,
   },
   dialectOptions: {
-    useUTC: false, //for reading from database
+    useUTC: false, // for reading from database
     dateStrings: true,
-    typeCast: function (field, next) {
+    typeCast(field, next) {
       // for reading from database
-      if (field.type === "DATETIME") {
+      if (field.type === 'DATETIME') {
         return field.string();
       }
       return next();
     },
   },
-  timezone: "+03:00",
+  timezone: '+03:00',
 };

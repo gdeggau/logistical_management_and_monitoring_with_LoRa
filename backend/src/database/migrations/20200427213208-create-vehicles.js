@@ -1,8 +1,6 @@
-"use strict";
-
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable("vehicles", {
+    return queryInterface.createTable('vehicles', {
       id: {
         type: Sequelize.UUID,
         allowNull: false,
@@ -28,9 +26,9 @@ module.exports = {
       },
       device_id: {
         type: Sequelize.UUID,
-        references: { model: "devices", key: "id" },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
+        references: { model: 'devices', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
         allowNull: true,
       },
       active: {
@@ -49,7 +47,7 @@ module.exports = {
     });
   },
 
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("vehicles");
+  down: (queryInterface) => {
+    return queryInterface.dropTable('vehicles');
   },
 };

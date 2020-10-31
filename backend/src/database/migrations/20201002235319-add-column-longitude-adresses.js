@@ -1,14 +1,12 @@
-"use strict";
-
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.addColumn("adresses", "longitude", {
+    return queryInterface.addColumn('adresses', 'longitude', {
       type: Sequelize.DECIMAL(9, 6),
       allowNull: true,
     });
   },
 
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.removeColumn("adresses", "longitude");
+  down: (queryInterface) => {
+    return queryInterface.removeColumn('adresses', 'longitude');
   },
 };

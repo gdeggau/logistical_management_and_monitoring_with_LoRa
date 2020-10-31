@@ -1,5 +1,5 @@
-import Sequelize, { Model } from "sequelize";
-import generateUuid from "../utils/generateUuid";
+import Sequelize, { Model } from 'sequelize';
+import generateUuid from '../utils/generateUuid';
 
 class Adress extends Model {
   static init(sequelize) {
@@ -18,7 +18,7 @@ class Adress extends Model {
       },
       {
         sequelize,
-        tableName: "adresses",
+        tableName: 'adresses',
       }
     );
 
@@ -29,9 +29,9 @@ class Adress extends Model {
 
   static associate(models) {
     this.belongsToMany(models.User, {
-      foreignKey: "adress_id",
+      foreignKey: 'adress_id',
       through: models.UsersAdresses,
-      as: "users",
+      as: 'users',
     });
   }
 }

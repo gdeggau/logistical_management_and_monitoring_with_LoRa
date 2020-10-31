@@ -1,4 +1,4 @@
 export default {
-  initialCharacter: "C",
+  initialCharacter: 'C',
   numberLength: 6,
 };

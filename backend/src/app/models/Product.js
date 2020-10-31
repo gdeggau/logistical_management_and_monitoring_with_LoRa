@@ -1,6 +1,6 @@
-import Sequelize, { Model } from "sequelize";
+import Sequelize, { Model } from 'sequelize';
 
-import generateUuid from "../utils/generateUuid";
+import generateUuid from '../utils/generateUuid';
 
 class Product extends Model {
   static init(sequelize) {
@@ -22,7 +22,7 @@ class Product extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.File, { foreignKey: "image_id" });
+    this.belongsTo(models.File, { foreignKey: 'image_id' });
   }
 }
 

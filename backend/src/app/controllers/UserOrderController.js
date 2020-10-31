@@ -1,15 +1,15 @@
-import * as Yup from "yup";
-import Order from "../models/Order";
+import * as Yup from 'yup';
+import Order from '../models/Order';
 
-import Adress from "../models/Adress";
-import UserAdresses from "../models/UsersAdresses";
-import Product from "../models/Product";
-import User from "../models/User";
+import Adress from '../models/Adress';
+import UserAdresses from '../models/UsersAdresses';
+import Product from '../models/Product';
+import User from '../models/User';
 
-import StatusOrder from "../utils/EnumStatusOrder";
+import StatusOrder from '../utils/EnumStatusOrder';
 
-import sequelizeInstance from "../../database/index";
-import OrdersHistory from "../models/OrdersHistory";
+import sequelizeInstance from '../../database/index';
+import OrdersHistory from '../models/OrdersHistory';
 
 class UserOrderController {
   async store(req, res) {
@@ -23,7 +23,7 @@ class UserOrderController {
       });
 
       if (!(await schema.isValid(req.body))) {
-        return res.status(400).json({ error: "Validation fails!" });
+        return res.status(400).json({ error: 'Validation fails!' });
       }
       transaction = await sequelizeInstance.connection.transaction();
       const product = await Product.findOne({
@@ -35,18 +35,18 @@ class UserOrderController {
         transaction,
       });
 
-      //verify address of user
+      // verify address of user
       if (!userAdress) {
         transaction.rollback();
         return res
           .status(400)
-          .json({ error: "No address was found, please provide another one!" });
+          .json({ error: 'No address was found, please provide another one!' });
       }
 
       // verify if exists product
       if (!product) {
         transaction.rollback();
-        return res.status(400).json({ error: "Product not exists!" });
+        return res.status(400).json({ error: 'Product not exists!' });
       }
 
       // const freight = Math.floor(Math.random() * (40 - 0 + 1) + 0);
@@ -55,15 +55,17 @@ class UserOrderController {
       const status = StatusOrder.PENDING.value;
       const observation = StatusOrder.PENDING.description;
 
-      const {
-        id,
-        user_id,
-        order_number,
-        product_id,
-        delivery_adress_id,
-        freight,
-        quantity,
-      } = await Order.create(
+      // const {
+      //   id,
+      //   user_id,
+      //   order_number,
+      //   product_id,
+      //   delivery_adress_id,
+      //   freight,
+      //   quantity,
+      // }
+
+      const orderCreated = await Order.create(
         {
           user_id: req.userId,
           product_id: req.body.product_id,
@@ -73,21 +75,41 @@ class UserOrderController {
           total_price,
           status,
           observation,
-          orders_history: {
-            status: StatusOrder.PENDING.value,
-            observation: StatusOrder.PENDING.description,
-          },
+          // orders_history: {
+          //   status: StatusOrder.PENDING.value,
+          //   observation: StatusOrder.PENDING.description,
+          // },
         },
         {
-          include: [
-            {
-              model: OrdersHistory,
-            },
-          ],
-        },
-        transaction
+          // include: [
+          //   {
+          //     model: OrdersHistory
+          //   },
+          // ],
+          transaction,
+        }
       );
+
+      const {
+        id,
+        user_id,
+        order_number,
+        product_id,
+        delivery_adress_id,
+        freight,
+        quantity,
+      } = orderCreated;
+
+      await orderCreated.createOrdersHistory(
+        {
+          status: StatusOrder.PENDING.value,
+          observation: StatusOrder.PENDING.description,
+        },
+        { transaction }
+      );
+
       await transaction.commit();
+
       return res.json({
         id,
         order_number,
@@ -105,7 +127,7 @@ class UserOrderController {
       if (transaction) await transaction.rollback();
       return res.status(400).json({
         error:
-          "An unexpected error occurred, please contact system administrator! ",
+          'An unexpected error occurred, please contact system administrator! ',
       });
     }
   }
@@ -114,42 +136,51 @@ class UserOrderController {
     // const { page = 1 } = req.query;
     const orders = await Order.findAll({
       where: { user_id: req.userId },
-      order: [["created_at", "DESC"]],
+      order: [
+        ['created_at', 'DESC'],
+        [OrdersHistory, 'created_at', 'ASC'],
+      ],
       attributes: [
-        "id",
-        "order_number",
-        "quantity",
-        "freight",
-        "total_price",
-        "status",
-        "observation",
-        "created_at",
+        'id',
+        'order_number',
+        'quantity',
+        'freight',
+        'total_price',
+        'status',
+        'observation',
+        'created_at',
+        'updated_at',
       ],
       // limit: 20,
       // offset: (page - 1) * 20,
       include: [
         {
           model: User,
-          as: "user",
-          attributes: ["name", "last_name", "telephone", "email"],
+          as: 'user',
+          attributes: ['name', 'full_name', 'last_name', 'telephone', 'email'],
         },
         {
           model: Product,
-          as: "product",
-          attributes: ["name", "description", "price"],
+          as: 'product',
+          attributes: ['name', 'description', 'price'],
         },
         {
           model: Adress,
-          as: "delivery_adress",
+          as: 'delivery_adress',
           attributes: [
-            "cep",
-            "address",
-            "number",
-            "complement",
-            "district",
-            "city",
-            "state",
+            'cep',
+            'address',
+            'number',
+            'complement',
+            'district',
+            'city',
+            'state',
           ],
+        },
+        {
+          model: OrdersHistory,
+          // as: 'orders_history',
+          attributes: ['id', 'status', 'observation', 'created_at'],
         },
       ],
     });

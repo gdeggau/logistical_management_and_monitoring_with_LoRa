@@ -1,6 +1,6 @@
-import * as Yup from "yup";
-import Product from "../models/Product";
-import User from "../models/User";
+import * as Yup from 'yup';
+import Product from '../models/Product';
+import User from '../models/User';
 
 class ProductController {
   async store(req, res) {
@@ -11,7 +11,7 @@ class ProductController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: "Validation fails" });
+      return res.status(400).json({ error: 'Validation fails' });
     }
 
     const productExists = await Product.findOne({
@@ -19,7 +19,7 @@ class ProductController {
     });
 
     if (productExists) {
-      return res.status(400).json({ error: "Product already exists" });
+      return res.status(400).json({ error: 'Product already exists' });
     }
 
     const {

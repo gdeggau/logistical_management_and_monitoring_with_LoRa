@@ -1,17 +1,22 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Menu = styled.div`
   height: 100%;
   width: 260px;
   background: var(--grayDark);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+  /* box-shadow: 0 0 20px rgba(0, 0, 0, 0.8); */
+  overflow: auto;
+
+  /* ::-webkit-scrollbar {
+    display: none;
+  } */
 
   div {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 44px 15px 30px;
+    padding: 0px 15px 30px;
     /* border-bottom: 1px solid #eee; */
 
     img {
@@ -44,7 +49,7 @@ export const MenuItem = styled.li`
   font-size: 16px;
 
   &:hover {
-    background: var(--header);
+    background: var(--grayDark2);
     opacity: 1;
   }
 `;

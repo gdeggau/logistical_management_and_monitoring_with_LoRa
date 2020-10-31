@@ -1,15 +1,14 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useField } from "@rocketseat/unform";
+import React, { useState, useRef, useEffect } from 'react';
+import { useField } from '@rocketseat/unform';
+import api from '~/services/api';
 
-import api from "~/services/api";
+import avatarDefault from '~/assets/avatar_default.svg';
 
-import avatarDefault from "~/assets/avatar_default.svg";
-
-import { Container } from "./styles";
+import { Container } from './styles';
 
 export default function AvatarInput() {
-  //pega o avatar que esta no redux
-  const { defaultValue, registerField } = useField("avatar");
+  // pega o avatar que esta no redux
+  const { defaultValue, registerField } = useField('avatar');
 
   const [file, setFile] = useState(defaultValue && defaultValue.id);
   const [preview, setPreview] = useState(defaultValue && defaultValue.url);
@@ -19,9 +18,9 @@ export default function AvatarInput() {
   useEffect(() => {
     if (ref.current) {
       registerField({
-        name: "avatar_id",
+        name: 'avatar_id',
         ref: ref.current,
-        path: "dataset.file",
+        path: 'dataset.file',
       });
     }
   }, [ref, registerField]);
@@ -29,9 +28,9 @@ export default function AvatarInput() {
   async function handleChange(e) {
     const data = new FormData();
 
-    data.append("file", e.target.files[0]);
+    data.append('file', e.target.files[0]);
 
-    const response = await api.post("files", data);
+    const response = await api.post('files', data);
 
     const { id, url } = response.data;
 

@@ -1,8 +1,8 @@
-import React from "react";
-import { useField, useFormikContext } from "formik";
-import DatePicker from "react-datepicker";
-import { DatePickerStyled } from "./styles";
-import { InputStyled } from "~/components/ReactstrapModified";
+import React from 'react';
+import { useField, useFormikContext } from 'formik';
+import DatePicker from 'react-datepicker';
+import { DatePickerStyled } from './styles';
+import { InputStyled } from '~/components/ReactstrapModified';
 // import { format } from "date-fns";
 // import pt from "date-fns/locale/pt";
 
@@ -12,7 +12,7 @@ export const DatePickerField = ({ ...props }) => {
   const [field] = useField(props);
 
   const CustomInput = ({ value, onClick }) => (
-    <InputStyled onClick={onClick} value={value} readOnly={true} />
+    <InputStyled onClick={onClick} value={value} readOnly />
   );
 
   const MyComp = React.forwardRef((props, ref) => (
@@ -24,7 +24,8 @@ export const DatePickerField = ({ ...props }) => {
         {...field}
         {...props}
         showTimeSelect
-        dateFormat="MM/dd/yyyy hh:mm aa"
+        dateFormat="MM/dd/yyyy HH:mm:ss"
+        timeFormat="HH:mm"
         customInput={<MyComp />}
         selected={(field.value && new Date(field.value)) || null}
         onChange={(val) => {

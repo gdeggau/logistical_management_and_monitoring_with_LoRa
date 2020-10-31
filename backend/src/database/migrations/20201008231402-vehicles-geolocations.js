@@ -1,23 +1,24 @@
-"use strict";
-
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable("cargos_geolocations", {
+    return queryInterface.createTable('vehicles_geolocations', {
       id: {
         type: Sequelize.UUID,
         allowNull: false,
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
       },
+      vehicle_id: {
+        type: Sequelize.UUID,
+        references: { model: 'vehicles', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+        allowNull: false,
+      },
       cargo_id: {
         type: Sequelize.UUID,
-        references: { model: "cargos", key: "id" },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
-        allowNull: true,
-      },
-      point: {
-        type: Sequelize.GEOMETRY("POINT"),
+        references: { model: 'cargos', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
         allowNull: true,
       },
       status: {
@@ -47,7 +48,7 @@ module.exports = {
     });
   },
 
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("cargos_geolocations");
+  down: (queryInterface) => {
+    return queryInterface.dropTable('vehicles_geolocations');
   },
 };

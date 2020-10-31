@@ -1,5 +1,5 @@
-import Sequelize, { Model } from "sequelize";
-import generateUuid from "../utils/generateUuid";
+import Sequelize, { Model } from 'sequelize';
+import generateUuid from '../utils/generateUuid';
 
 class OrdersHistory extends Model {
   static init(sequelize) {
@@ -12,11 +12,11 @@ class OrdersHistory extends Model {
           primaryKey: true,
         },
         status: Sequelize.STRING,
-        observations: Sequelize.STRING,
+        observation: Sequelize.STRING,
       },
       {
         sequelize,
-        tableName: "orders_history",
+        tableName: 'orders_history',
       }
     );
 
@@ -25,7 +25,7 @@ class OrdersHistory extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.Order, { foreignKey: "order_id", as: "order" });
+    this.belongsTo(models.Order, { foreignKey: 'order_id', as: 'order' });
   }
 }
 

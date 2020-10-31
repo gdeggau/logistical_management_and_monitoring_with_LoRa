@@ -1,13 +1,11 @@
-"use strict";
-
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
+  up: async (queryInterface) => {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
         queryInterface.renameColumn(
-          "cargos_orders",
-          "pending_scan",
-          "scanned",
+          'cargos_orders',
+          'pending_scan',
+          'scanned',
           { transaction: t }
         ),
         // queryInterface.changeColumn(
@@ -22,13 +20,13 @@ module.exports = {
     });
   },
 
-  down: async (queryInterface, Sequelize) => {
+  down: async (queryInterface) => {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
         queryInterface.renameColumn(
-          "cargos_orders",
-          "scanned",
-          "pending_scan",
+          'cargos_orders',
+          'scanned',
+          'pending_scan',
           { transaction: t }
         ),
         // queryInterface.changeColumn(

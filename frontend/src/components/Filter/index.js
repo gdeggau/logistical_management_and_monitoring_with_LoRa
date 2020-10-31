@@ -1,10 +1,10 @@
-import React from "react";
-import { Input, CustomInput } from "reactstrap";
+import React from 'react';
+import { Input, CustomInput } from 'reactstrap';
 
 export const Filter = ({ column }) => {
   return (
     <div style={{ marginTop: 5 }}>
-      {column.canFilter && column.render("Filter")}
+      {column.canFilter && column.render('Filter')}
     </div>
   );
 };
@@ -19,12 +19,12 @@ export const DefaultColumnFilter = ({
   return (
     <Input
       bsSize="sm"
-      value={filterValue || ""}
+      value={filterValue || ''}
       onChange={(e) => {
         setFilter(e.target.value || undefined);
       }}
-      placeholder={`Type to search`}
-      style={{ background: "#3c3e49", border: 0, color: "#fff" }}
+      placeholder="Type to search"
+      style={{ background: '#3c3e49', border: 0, color: '#fff' }}
     />
   );
 };
@@ -50,7 +50,7 @@ export const SelectColumnFilter = ({
       onChange={(e) => {
         setFilter(e.target.value || undefined);
       }}
-      style={{ background: "#3c3e49", border: 0, color: "#fff" }}
+      style={{ background: '#3c3e49', border: 0, color: '#fff' }}
     >
       <option value="">All</option>
       {options.map((option) => (

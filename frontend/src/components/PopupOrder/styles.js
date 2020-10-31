@@ -1,11 +1,11 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-export const CargoNumber = styled.span`
+export const OrderNumber = styled.span`
   font-weight: bold;
   align-content: center;
 `;
 
-export const Driver = styled.div`
+export const Address = styled.div`
   margin: 7px 0 7px 0;
   /* padding-top: 5px; */
   border-top: 2px;

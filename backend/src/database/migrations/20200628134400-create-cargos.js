@@ -1,8 +1,6 @@
-"use strict";
-
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable("cargos", {
+    return queryInterface.createTable('cargos', {
       id: {
         type: Sequelize.UUID,
         allowNull: false,
@@ -32,16 +30,16 @@ module.exports = {
       },
       driver_id: {
         type: Sequelize.UUID,
-        references: { model: "users", key: "id" },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
+        references: { model: 'users', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
         allowNull: true,
       },
       vehicle_id: {
         type: Sequelize.UUID,
-        references: { model: "vehicles", key: "id" },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
+        references: { model: 'vehicles', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
         allowNull: true,
       },
       status: {
@@ -63,7 +61,7 @@ module.exports = {
     });
   },
 
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("cargos");
+  down: (queryInterface) => {
+    return queryInterface.dropTable('cargos');
   },
 };

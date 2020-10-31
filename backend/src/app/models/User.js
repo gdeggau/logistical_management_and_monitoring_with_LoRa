@@ -1,9 +1,9 @@
-import Sequelize, { Model } from "sequelize";
-import bcrypt from "bcryptjs";
-import generateUuid from "../utils/generateUuid";
+import Sequelize, { Model } from 'sequelize';
+import bcrypt from 'bcryptjs';
+import generateUuid from '../utils/generateUuid';
 
 class User extends Model {
-  //o parametro sequelize é a conexão com o banco de dados
+  // o parametro sequelize é a conexão com o banco de dados
   static init(sequelize) {
     super.init(
       {
@@ -11,8 +11,8 @@ class User extends Model {
         last_name: Sequelize.STRING,
         telephone: Sequelize.STRING,
         email: Sequelize.STRING,
-        //VIRTUAL é um tipo de dado que nunca vai existir nada base
-        //apena utilizado no código
+        // VIRTUAL é um tipo de dado que nunca vai existir nada base
+        // apena utilizado no código
         password: Sequelize.VIRTUAL,
         password_hash: Sequelize.STRING,
         role: Sequelize.STRING,
@@ -30,7 +30,7 @@ class User extends Model {
 
     generateUuid(this);
 
-    this.addHook("beforeSave", async (user) => {
+    this.addHook('beforeSave', async (user) => {
       if (user.password) {
         user.password_hash = await bcrypt.hash(user.password, 8);
       }
@@ -40,11 +40,11 @@ class User extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.File, { foreignKey: "avatar_id", as: "avatar" });
+    this.belongsTo(models.File, { foreignKey: 'avatar_id', as: 'avatar' });
     this.belongsToMany(models.Adress, {
-      foreignKey: "user_id",
+      foreignKey: 'user_id',
       through: models.UsersAdresses,
-      as: "adresses",
+      as: 'adresses',
     });
   }
 

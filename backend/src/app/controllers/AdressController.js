@@ -1,5 +1,5 @@
-import * as Yup from "yup";
-import Adress from "../models/Adress";
+import * as Yup from 'yup';
+import Adress from '../models/Adress';
 
 class AddressController {
   async store(req, res, next) {
@@ -21,7 +21,7 @@ class AddressController {
     }
 
     if (!(await schema.isValid(objectAdress))) {
-      return res.status(400).json({ error: "Validation fails" });
+      return res.status(400).json({ error: 'Validation fails' });
     }
     const address = await Adress.create(objectAdress);
 

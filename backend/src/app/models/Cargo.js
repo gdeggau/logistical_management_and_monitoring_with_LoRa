@@ -1,7 +1,7 @@
-import Sequelize, { Model } from "sequelize";
+import Sequelize, { Model } from 'sequelize';
 
-import generateUuid from "../utils/generateUuid";
-import generateSequencialCargoNumber from "../utils/generateSequencialCargoNumber";
+import generateUuid from '../utils/generateUuid';
+import generateSequencialCargoNumber from '../utils/generateSequencialCargoNumber';
 
 class Cargo extends Model {
   static init(sequelize) {
@@ -21,7 +21,7 @@ class Cargo extends Model {
     );
 
     generateUuid(this);
-    this.addHook("beforeCreate", async (cargo) => {
+    this.addHook('beforeCreate', async (cargo) => {
       const cargo_number = await generateSequencialCargoNumber(cargo, this);
       cargo.cargo_number = cargo_number;
     });
@@ -29,16 +29,12 @@ class Cargo extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.Vehicle, { foreignKey: "vehicle_id", as: "vehicle" });
-    this.belongsTo(models.User, { foreignKey: "driver_id", as: "driver" });
+    this.belongsTo(models.Vehicle, { foreignKey: 'vehicle_id', as: 'vehicle' });
+    this.belongsTo(models.User, { foreignKey: 'driver_id', as: 'driver' });
     this.belongsToMany(models.Order, {
-      foreignKey: "cargo_id",
+      foreignKey: 'cargo_id',
       through: models.CargosOrders,
-      as: "orders",
-    });
-    this.hasMany(models.CargosGeolocation, {
-      foreignKey: "cargo_id",
-      as: "geolocations",
+      as: 'orders',
     });
   }
 }

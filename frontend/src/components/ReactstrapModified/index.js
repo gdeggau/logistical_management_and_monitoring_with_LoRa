@@ -1,6 +1,6 @@
-import React from "react";
-import { Input, Label } from "reactstrap";
-import { darken } from "polished";
+import React from 'react';
+import { Input, Label } from 'reactstrap';
+import { darken } from 'polished';
 
 // import { Container } from './styles';
 
@@ -11,14 +11,14 @@ export function InputStyled({ ...rest }) {
       {...rest}
       bsSize="sm"
       style={{
-        backgroundColor: disabled ? darken(0.2, "#fff") : "#fff",
+        backgroundColor: disabled ? darken(0.2, '#fff') : '#fff',
       }}
     />
   );
 }
 
 export function LabelStyled({ ...rest }) {
-  return <Label {...rest} size="sm" style={{ color: "#fff" }} />;
+  return <Label {...rest} size="sm" style={{ color: '#fff' }} />;
 }
 
 // &::placeholder {

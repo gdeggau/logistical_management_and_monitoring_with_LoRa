@@ -1,5 +1,5 @@
-import Sequelize, { Model } from "sequelize";
-import generateUuid from "../utils/generateUuid";
+import Sequelize, { Model } from 'sequelize';
+import generateUuid from '../utils/generateUuid';
 
 class UsersAdresses extends Model {
   static init(sequelize) {
@@ -17,7 +17,7 @@ class UsersAdresses extends Model {
       },
       {
         sequelize,
-        tableName: "users_adresses",
+        tableName: 'users_adresses',
       }
     );
 

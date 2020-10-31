@@ -1,11 +1,10 @@
-import Sequelize, { Model } from "sequelize";
-import generateUuid from "../utils/generateUuid";
+import Sequelize, { Model } from 'sequelize';
+import generateUuid from '../utils/generateUuid';
 
-class CargosGeolocation extends Model {
+class VehiclesGeolocation extends Model {
   static init(sequelize) {
     super.init(
       {
-        point: Sequelize.GEOMETRY("POINT"),
         status: Sequelize.STRING,
         observation: Sequelize.STRING,
         latitude: Sequelize.DECIMAL(9, 6),
@@ -22,8 +21,9 @@ class CargosGeolocation extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.Cargo, { foreignKey: "cargo_id", as: "cargo" });
+    this.belongsTo(models.Vehicle, { foreignKey: 'vehicle_id', as: 'vehicle' });
+    this.belongsTo(models.Cargo, { foreignKey: 'cargo_id', as: 'cargo' });
   }
 }
 
-export default CargosGeolocation;
+export default VehiclesGeolocation;

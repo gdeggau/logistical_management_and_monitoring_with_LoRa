@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
+import React, { useState } from 'react';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 
 const [modal, setModal] = useState();
 
@@ -13,7 +13,7 @@ export const ModalProduct = (product) => {
       <ModalFooter>
         <Button color="primary" onClick={toggle}>
           Do Something
-        </Button>{" "}
+        </Button>{' '}
       </ModalFooter>
     </Modal>
   );
