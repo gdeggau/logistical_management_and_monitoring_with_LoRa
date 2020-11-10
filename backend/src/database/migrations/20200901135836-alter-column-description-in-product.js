@@ -6,9 +6,10 @@ module.exports = {
     );
   },
 
-  down: (queryInterface) => {
+  down: (queryInterface, Sequelize) => {
     return queryInterface.changeColumn('products', 'description', {
-      unique: true,
+      type: Sequelize.STRING,
+      allowNull: true,
     });
   },
 };
