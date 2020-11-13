@@ -13,9 +13,8 @@ module.exports = {
   down: (queryInterface) => {
     return Promise.all([
       queryInterface.changeColumn('users', 'role', {
-        type: Sequelize.BOOLEAN,
+        type: Sequelize.STRING,
         allowNull: false,
-        defaultValue: false,
       }),
     ]);
   },

@@ -16,6 +16,11 @@ module.exports = {
     'no-console': 'off',
     camelcase: 'off',
     'no-unused-vars': ['error', { argsIgnorePattern: 'next' }],
-    'prettier/prettier': 'error',
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
   },
 };

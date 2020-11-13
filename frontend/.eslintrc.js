@@ -20,7 +20,12 @@ module.exports = {
   },
   plugins: ['react', 'jsx-a11y', 'import', 'react-hooks', 'prettier'],
   rules: {
-    'prettier/prettier': 'error',
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
     'react/jsx-filename-extension': ['warn', { extensions: ['.jsx', '.js'] }],
     'import/prefer-default-export': 'off',
     'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
