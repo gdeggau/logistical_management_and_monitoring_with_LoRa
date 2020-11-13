@@ -63,7 +63,7 @@ function CargoNew() {
         disableSortBy: true,
       },
       {
-        Header: 'Order number',
+        Header: 'Pedido',
         accessor: 'order_number',
         disableFilters: true,
         disableSortBy: true,
@@ -75,73 +75,73 @@ function CargoNew() {
         disableSortBy: true,
       },
       {
-        Header: 'Observation',
+        Header: 'Observação',
         accessor: 'observation',
         disableFilters: true,
         disableSortBy: true,
       },
       {
-        Header: 'Client',
+        Header: 'Cliente',
         accessor: 'user.name',
         disableFilters: true,
         disableSortBy: true,
       },
       {
-        Header: 'Product',
+        Header: 'Produto',
         accessor: 'product.name',
         disableFilters: true,
         disableSortBy: true,
       },
       {
-        Header: 'Quantity',
+        Header: 'Quantid.',
         accessor: 'quantity',
         disableFilters: true,
         disableSortBy: true,
       },
       {
-        Header: 'ZIP Code',
+        Header: 'CEP',
         accessor: 'delivery_adress.cep',
         disableFilters: true,
         disableSortBy: true,
       },
       {
-        Header: 'Street',
+        Header: 'Rua',
         accessor: 'delivery_adress.address',
         disableFilters: true,
         disableSortBy: true,
       },
       {
-        Header: 'Number',
+        Header: 'Número',
         accessor: 'delivery_adress.number',
         disableFilters: true,
         disableSortBy: true,
       },
       {
-        Header: 'Complement',
+        Header: 'Complemento',
         accessor: 'delivery_adress.complement',
         disableFilters: true,
         disableSortBy: true,
       },
       {
-        Header: 'District',
+        Header: 'Bairro',
         accessor: 'delivery_adress.district',
         disableFilters: true,
         disableSortBy: true,
       },
       {
-        Header: 'City',
+        Header: 'Cidade',
         accessor: 'delivery_adress.city',
         disableFilters: true,
         disableSortBy: true,
       },
       {
-        Header: 'State',
+        Header: 'Estado',
         accessor: 'delivery_adress.state',
         disableFilters: true,
         disableSortBy: true,
       },
       {
-        Header: 'Ordered',
+        Header: 'Data pedido',
         accessor: ({ created_at }) => dateFormat(created_at),
         disableFilters: true,
         disableSortBy: true,
@@ -214,7 +214,7 @@ function CargoNew() {
   function renderDriversToSelect() {
     let options = [
       <option key={1} value={null}>
-        Select a driver
+        Selecione um motorista
       </option>,
     ];
     if (drivers !== undefined) {
@@ -233,7 +233,7 @@ function CargoNew() {
   function renderVehiclesToSelect() {
     let options = [
       <option key={1} value={null}>
-        Select a vehicle
+        Selecione um veículo
       </option>,
     ];
     if (vehicles !== undefined) {
@@ -242,7 +242,7 @@ function CargoNew() {
           <option
             key={vehicle.id}
             value={vehicle.id}
-          >{`${vehicle.license_plate} - ${vehicle.reference}  |  ${vehicle.model}`}</option>
+          >{`${vehicle.license_plate} - ${vehicle.reference}  |  ${vehicle.device.name}`}</option>
         ))
       );
     }
@@ -289,15 +289,23 @@ function CargoNew() {
                 plan_delivery_leave &&
                 schema.min(
                   plan_delivery_leave,
-                  'Date to return must be after date to leave'
+                  'Data de retorno precise ser após a data de saída'
                 )
             )
             .required('Required'),
           driver: Yup.string()
-            .test('driver', 'Required', (val) => val !== 'Select a driver')
+            .test(
+              'driver',
+              'Required',
+              (val) => val !== 'Selecione um motorista'
+            )
             .required('Required'),
           vehicle: Yup.string()
-            .test('vehicle', 'Required', (val) => val !== 'Select a vehicle')
+            .test(
+              'vehicle',
+              'Required',
+              (val) => val !== 'Selecione um veículo'
+            )
             .required('Required'),
         })}
         onSubmit={async (values, { setSubmitting, resetForm }) => {
@@ -320,7 +328,7 @@ function CargoNew() {
 
             const { cargo_number } = response.data;
 
-            toast.success(`${cargo_number} was created!`, {
+            toast.success(`Carga ${cargo_number} foi criada!`, {
               autoClose: 5000,
             });
             resetForm({});
@@ -342,7 +350,7 @@ function CargoNew() {
             <Container fluid={false}>
               <FormGroup row>
                 <Col sm={6}>
-                  <LabelStyled>Plan delivery leave:</LabelStyled>
+                  <LabelStyled>Saída de entrega planejada:</LabelStyled>
                   <DatePicker
                     name="plan_delivery_leave"
                     selectsStart
@@ -360,7 +368,7 @@ function CargoNew() {
                   <Error name="plan_delivery_leave" />
                 </Col>
                 <Col sm={6}>
-                  <LabelStyled>Plan delivery return:</LabelStyled>
+                  <LabelStyled>Retorno de entrega planejada:</LabelStyled>
                   <DatePicker
                     name="plan_delivery_return"
                     selectsEnd
@@ -380,7 +388,7 @@ function CargoNew() {
               </FormGroup>
               <FormGroup row>
                 <Col sm={6}>
-                  <LabelStyled>Driver:</LabelStyled>
+                  <LabelStyled>Motorista:</LabelStyled>
                   <InputStyled
                     name="driver"
                     type="select"
@@ -391,7 +399,7 @@ function CargoNew() {
                   <Error name="driver" />
                 </Col>
                 <Col sm={6}>
-                  <LabelStyled>Vehicle:</LabelStyled>
+                  <LabelStyled>Veículo:</LabelStyled>
                   <InputStyled
                     name="vehicle"
                     type="select"
@@ -414,7 +422,7 @@ function CargoNew() {
                   borderColor: 'rgba(255, 255, 255, 0.4)',
                 }}
               >
-                <Label>Select orders below to be in cargo</Label>
+                <Label>Selecione os pedidos abaixo para serem entregues</Label>
               </div>
               <TableContainer
                 columns={columns}
@@ -429,9 +437,9 @@ function CargoNew() {
               type="submit"
               disabled={formik.isSubmitting}
             >
-              Create
+              Salvar
             </Button>{' '}
-            <Button onClick={() => history.push('/cargos')}>Cancel</Button>
+            <Button onClick={() => history.push('/cargos')}>Cancelar</Button>
             {/* </FormGroup> */}
           </Form>
         )}

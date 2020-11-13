@@ -32,7 +32,7 @@ class UserAdressesController {
       const { access_token, country, base_url, geocoding } = mapboxConfig;
 
       const responseMapbox = await axios.get(
-        `${base_url}${geocoding} ${address} ${district} ${city} ${state}.json`,
+        `${base_url}${geocoding} ${number} ${address} ${district} ${city} ${state}.json`,
         {
           params: { access_token, country },
         }

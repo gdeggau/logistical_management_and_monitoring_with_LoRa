@@ -8,39 +8,48 @@ import avatar_default from '~/assets/avatar_default.svg';
 
 const pages = [
   {
-    page: 'adresses',
+    page: 'cargas',
+    route: 'cargos',
+    isAdmin: true,
+  },
+  {
+    page: 'catálogo',
+    route: 'catalog',
     isAdmin: false,
   },
   {
-    page: 'cargos',
+    page: 'dispositivos',
+    route: 'devices',
     isAdmin: true,
   },
   {
-    page: 'catalog',
+    page: 'endereços',
+    route: 'adresses',
     isAdmin: false,
   },
   {
-    page: 'devices',
-    isAdmin: true,
-  },
-  {
-    page: 'monitoring',
-    isAdmin: true,
-  },
-  {
-    page: 'orders',
+    page: 'pedidos',
+    route: 'orders',
     isAdmin: false,
   },
   {
-    page: 'products',
+    page: 'produtos',
+    route: 'products',
     isAdmin: true,
   },
   {
-    page: 'users',
+    page: 'rastreamento',
+    route: 'tracking',
     isAdmin: true,
   },
   {
-    page: 'vehicles',
+    page: 'usuários',
+    route: 'users',
+    isAdmin: true,
+  },
+  {
+    page: 'veículos',
+    route: 'vehicles',
     isAdmin: true,
   },
 ];
@@ -65,14 +74,14 @@ export default function MenuLeft() {
         {pages.map((page) => {
           if (profile.role === 'ADMIN') {
             return (
-              <Link to={`/${page.page}`} key={page.page}>
+              <Link to={`/${page.route}`} key={page.page}>
                 <MenuItem>{capitalizeFirstLetter(page.page)}</MenuItem>
               </Link>
             );
           }
           if (profile.role !== 'ADMIN' && !page.isAdmin) {
             return (
-              <Link to={`/${page.page}`} key={page.page}>
+              <Link to={`/${page.route}`} key={page.page}>
                 <MenuItem>{capitalizeFirstLetter(page.page)}</MenuItem>
               </Link>
             );

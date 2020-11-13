@@ -14,34 +14,34 @@ function Device() {
   const columns = useMemo(
     () => [
       {
-        Header: 'Device name',
+        Header: 'Nome',
         accessor: 'name',
       },
       {
-        Header: 'Device EUI',
+        Header: 'DevEUI',
         accessor: 'device_identifier',
       },
       {
-        Header: 'Device label',
+        Header: 'Rótulo',
         accessor: 'label',
       },
       {
-        Header: 'Description',
+        Header: 'Descrição',
         accessor: 'description',
       },
       {
-        Header: 'Actual vehicle',
+        Header: 'Veículo atual',
         accessor: ({ vehicles }) =>
           vehicles.length !== 0
             ? `${vehicles[0].license_plate} - ${vehicles[0].reference}`
             : '',
       },
       {
-        Header: 'Created at',
+        Header: 'Criado em',
         accessor: ({ createdAt }) => dateFormat(createdAt || ''),
       },
       {
-        Header: 'Actions',
+        Header: 'Ações',
         accessor: () => {
           return (
             <div
@@ -82,7 +82,7 @@ function Device() {
       <>
         <TableContainer columns={columns} data={device} size="sm" />
         <Link to="/devices/new">
-          <Button color="primary">New device</Button>
+          <Button color="primary">Novo dispositivo</Button>
         </Link>
       </>
     </Wrapper>

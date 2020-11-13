@@ -27,4 +27,4 @@
 /frontend/yarn-debug.log*
 /frontend/yarn-error.log*
 
-/device/lorawan/lorawan.ino
+/device/lorawan/

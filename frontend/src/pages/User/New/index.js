@@ -64,12 +64,12 @@ function UserNew() {
           <Form onSubmit={formik.handleSubmit}>
             <FormGroup row>
               <Col sm={5}>
-                <LabelStyled>Name:</LabelStyled>
+                <LabelStyled>Nome:</LabelStyled>
                 <InputStyled name="name" {...formik.getFieldProps('name')} />
                 <Error name="name" />
               </Col>
               <Col sm={5}>
-                <LabelStyled>Last name:</LabelStyled>
+                <LabelStyled>Sobrenome:</LabelStyled>
                 <InputStyled
                   name="last_name"
                   {...formik.getFieldProps('last_name')}
@@ -77,7 +77,7 @@ function UserNew() {
                 <Error name="last_name" />
               </Col>
               <Col sm={2}>
-                <LabelStyled>Type:</LabelStyled>
+                <LabelStyled>Perfil:</LabelStyled>
                 <InputStyled
                   name="role"
                   type="select"
@@ -107,7 +107,7 @@ function UserNew() {
                 <Error name="email" />
               </Col>
               <Col sm={4}>
-                <LabelStyled>Phone number:</LabelStyled>
+                <LabelStyled>Celular:</LabelStyled>
                 <InputStyled
                   name="telephone"
                   mask="(99) 9 9999-9999"
@@ -122,10 +122,10 @@ function UserNew() {
               color="primary"
               disabled={formik.isSubmitting}
             >
-              Create
+              Salvar
             </Button>{' '}
             <Button color="secondary" onClick={() => history.push('/users')}>
-              Cancel
+              Cancelar
             </Button>
           </Form>
         )}

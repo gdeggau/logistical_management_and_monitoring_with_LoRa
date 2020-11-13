@@ -20,7 +20,7 @@ import {
   ModalFooter,
 } from 'reactstrap';
 import { format } from 'date-fns';
-// import generatePDFDocument from '~/services/pdf/generatePdfDocument';
+import generatePDFDocument from '~/services/pdf/generatePdfDocument';
 import Wrapper from '~/pages/_layouts/wrapper';
 import history from '~/services/history';
 import dateFormat from '~/utils/dateFormat';
@@ -53,14 +53,14 @@ function Delivery({ match }) {
   const columns = useMemo(
     () => [
       {
-        Header: 'Scanned',
+        Header: 'Escaneado',
         accessor: ({ other_infos }) => {
           return generateIconScanned(other_infos.scanned);
         },
         disableFilters: true,
       },
       {
-        Header: 'Order',
+        Header: 'Pedido',
         accessor: 'order_number',
         disableFilters: true,
       },
@@ -70,57 +70,57 @@ function Delivery({ match }) {
         disableFilters: true,
       },
       {
-        Header: 'Client',
+        Header: 'Cliente',
         accessor: 'user.name',
         disableFilters: true,
       },
       {
-        Header: 'Product',
+        Header: 'Produto',
         accessor: 'product.name',
         disableFilters: true,
       },
       {
-        Header: 'Quantity',
+        Header: 'Quantidade',
         accessor: 'quantity',
         disableFilters: true,
       },
       {
-        Header: 'ZIP Code',
+        Header: 'CEP',
         accessor: 'delivery_adress.cep',
         disableFilters: true,
       },
       {
-        Header: 'Street',
+        Header: 'Rua',
         accessor: 'delivery_adress.address',
         disableFilters: true,
       },
       {
-        Header: 'Number',
+        Header: 'Número',
         accessor: 'delivery_adress.number',
         disableFilters: true,
       },
       {
-        Header: 'Complement',
+        Header: 'Complemento',
         accessor: 'delivery_adress.complement',
         disableFilters: true,
       },
       {
-        Header: 'District',
+        Header: 'Bairro',
         accessor: 'delivery_adress.district',
         disableFilters: true,
       },
       {
-        Header: 'City',
+        Header: 'Cidade',
         accessor: 'delivery_adress.city',
         disableFilters: true,
       },
       {
-        Header: 'State',
+        Header: 'Estado',
         accessor: 'delivery_adress.state',
         disableFilters: true,
       },
       {
-        Header: 'Last update',
+        Header: 'Última att.',
         accessor: ({ updated_at }) => dateFormat(updated_at || ''),
         disableFilters: true,
       },
@@ -147,24 +147,22 @@ function Delivery({ match }) {
         });
         orderScanned === ''
           ? toast.error(
-              `Was not possible to identify order with barcode: ${value}`
+              `Não foi possível identificar um pedido com o código de barras ${value}`
             )
-          : toast.success(`Order ${orderScanned} scanned successfully!`);
+          : toast.success(`Pedido ${orderScanned} validado!`);
         setCargo({ ...cargo, orders: result });
       } else if (checkIfIsVehicleOrOrder === 'VV') {
         if (value === cargo.vehicle.barcode_scan) {
-          toast.success(
-            `Vehicle ${cargo.vehicle.license_plate} scanned successfully!`
-          );
+          toast.success(`Veículo ${cargo.vehicle.license_plate} validado!`);
           setScanVehicle(true);
         } else {
           toast.error(
-            `Was not possible to identify vehicle with barcode: ${value}`
+            `Não foi possível identificar o veículo com o código de barras ${value}`
           );
           setScanVehicle(false);
         }
       } else {
-        toast.error('The barcode scanned is not from vehicle neither order!');
+        toast.error('O código de barras não pertence a um veículo ou pedido!');
       }
       event.target.value = '';
     }
@@ -177,7 +175,7 @@ function Delivery({ match }) {
         (order) => order.other_infos.scanned === false
       );
       if (scanVehicle === false || orderNotScanned) {
-        return toast.error('There is orders or vehicle not scanned yet!');
+        return toast.error('O veículo ou algum pedido falta ser escaneado!');
       }
 
       const response = await api.post('cargos/delivery', {
@@ -186,7 +184,7 @@ function Delivery({ match }) {
         orders: cargo.orders,
       });
 
-      toast.success(`${response.data.cargo_number} is on delivery!`, {
+      toast.success(`${response.data.cargo_number} está em entrega!`, {
         autoClose: 5000,
       });
       setCargo(response.data);
@@ -270,7 +268,7 @@ function Delivery({ match }) {
               </Input>
             </Col>
             <Col sm={8}>
-              <span className="font-weight-bold">Observation: </span>
+              <span className="font-weight-bold">Observação: </span>
               <Input
                 bsSize="sm"
                 name={keyObservation}
@@ -329,7 +327,7 @@ function Delivery({ match }) {
                 const response = await api.put('/cargos', cargo);
 
                 toast.success(
-                  `Cargo ${response.data.cargo_number} was finished!`,
+                  `Carga ${response.data.cargo_number} foi finalizada!`,
                   {
                     autoClose: 5000,
                   }
@@ -350,19 +348,19 @@ function Delivery({ match }) {
                 <ModalBody>
                   <Row>
                     <Col>
-                      <span className="font-weight-bold">Leaved: </span>
+                      <span className="font-weight-bold">Saída: </span>
                       <span>{`${dateFormat(
                         cargo.delivery_date_leave || ''
                       )}`}</span>
                     </Col>
                     <Col>
-                      <span className="font-weight-bold">Plan return: </span>
+                      <span className="font-weight-bold">Retorno plan.: </span>
                       <span>{`${dateFormat(
                         cargo.plan_delivery_date_return || ''
                       )}`}</span>
                     </Col>
                     <Col>
-                      <span className="font-weight-bold">Returned: </span>
+                      <span className="font-weight-bold">Retorno: </span>
                       <span>{`${format(
                         new Date(),
                         'MM/dd/yyyy HH:mm:ss'
@@ -388,7 +386,7 @@ function Delivery({ match }) {
                       </Input>
                     </Col>
                     <Col sm={8}>
-                      <span className="font-weight-bold">Observation: </span>
+                      <span className="font-weight-bold">Observação: </span>
                       <Input
                         bsSize="sm"
                         name="observationCargo"
@@ -405,7 +403,7 @@ function Delivery({ match }) {
                           fontSize: '14px',
                         }}
                       >
-                        Orders
+                        Pedidos
                       </Label>
                     </Col>
                   </Row>
@@ -417,7 +415,7 @@ function Delivery({ match }) {
                     type="submit"
                     onClick={() => toggle()}
                   >
-                    Confirm
+                    Confirmar
                   </Button>
                 </ModalFooter>
               </Form>
@@ -426,7 +424,7 @@ function Delivery({ match }) {
         </Modal>
       );
     }
-    return <div>Loading infos to modal...</div>;
+    return <div>Carregando...</div>;
   }
 
   function renderCargoDelivery() {
@@ -445,7 +443,7 @@ function Delivery({ match }) {
           </div>
           <Row>
             <Col>
-              <LabelStyled>Vehicle Scanned: </LabelStyled>
+              <LabelStyled>Veículo escaneado: </LabelStyled>
               {cargo.status === 'ONDELIVERY' || cargo.status === 'FINISHED'
                 ? generateIconScanned(true)
                 : generateIconScanned(scanVehicle)}
@@ -455,14 +453,14 @@ function Delivery({ match }) {
               />
             </Col>
             <Col>
-              <LabelStyled>Driver:</LabelStyled>
+              <LabelStyled>Motorista:</LabelStyled>
               <InputStyled
                 disabled
                 value={`${cargo.driver.name} ${cargo.driver.last_name}`}
               />
             </Col>
             <Col>
-              <LabelStyled>Telephone:</LabelStyled>
+              <LabelStyled>Celular:</LabelStyled>
               <InputStyled disabled value={`${cargo.driver.telephone} `} />
             </Col>
             <Col>
@@ -475,28 +473,28 @@ function Delivery({ match }) {
           </Row>
           <Row>
             <Col>
-              <LabelStyled>Planned delivery:</LabelStyled>
+              <LabelStyled>Saída planejada:</LabelStyled>
               <InputStyled
                 disabled
                 value={dateFormat(cargo.plan_delivery_date_leave || '')}
               />
             </Col>
             <Col>
-              <LabelStyled>Planned return:</LabelStyled>
+              <LabelStyled>Retorno planejado:</LabelStyled>
               <InputStyled
                 disabled
                 value={dateFormat(cargo.plan_delivery_date_return || '')}
               />
             </Col>
             <Col>
-              <LabelStyled>Delivery leaved:</LabelStyled>
+              <LabelStyled>Saída:</LabelStyled>
               <InputStyled
                 disabled
                 value={dateFormat(cargo.delivery_date_leave || '')}
               />
             </Col>
             <Col>
-              <LabelStyled>Delivery returned:</LabelStyled>
+              <LabelStyled>Retorno:</LabelStyled>
               <InputStyled
                 disabled
                 value={dateFormat(cargo.delivery_date_return || '')}
@@ -542,7 +540,7 @@ function Delivery({ match }) {
                     fontSize: '20px',
                   }}
                 >
-                  Orders
+                  Pedidos
                 </Label>{' '}
               </div>
             </Container>
@@ -557,7 +555,7 @@ function Delivery({ match }) {
               <TableContainer columns={columns} data={cargo.orders} size="sm" />
             </Container>
             <Button disabled={isDisabledStart()} type="submit" color="primary">
-              Start delivery
+              Iniciar entrega
             </Button>
             {'  '}
             <Button
@@ -565,15 +563,15 @@ function Delivery({ match }) {
               color="primary"
               onClick={toggle}
             >
-              Finish delivery
+              Finalizar entrega
             </Button>
             {'  '}
-            {/* <Button onClick={() => generatePDFDocument(cargo)}>
+            <Button onClick={() => generatePDFDocument(cargo)}>
               <VscFilePdf size="20px" />
             </Button>
-            {'  '} */}
+            {'  '}
             <Button color="secondary" onClick={() => history.push('/cargos')}>
-              Cancel
+              Cancelar
             </Button>
           </Form>
         </>

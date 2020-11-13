@@ -42,12 +42,12 @@ function ProductNew() {
           <Form onSubmit={formik.handleSubmit}>
             <FormGroup row>
               <Col sm={8}>
-                <LabelStyled>Name: </LabelStyled>
+                <LabelStyled>Produto: </LabelStyled>
                 <InputStyled name="name" {...formik.getFieldProps('name')} />
                 <Error name="name" />
               </Col>
               <Col sm={4}>
-                <LabelStyled>Price (R$): </LabelStyled>
+                <LabelStyled>Preço (R$): </LabelStyled>
                 <InputStyled
                   name="price"
                   type="number"
@@ -59,7 +59,7 @@ function ProductNew() {
             </FormGroup>
             <FormGroup row>
               <Col>
-                <LabelStyled>Description: </LabelStyled>
+                <LabelStyled>Descrição: </LabelStyled>
                 <InputStyled
                   name="description"
                   {...formik.getFieldProps('description')}
@@ -72,10 +72,10 @@ function ProductNew() {
               color="primary"
               disabled={formik.isSubmitting}
             >
-              Create
+              Save
             </Button>{' '}
             <Button color="secondary" onClick={() => history.push('/products')}>
-              Cancel
+              Cancelar
             </Button>
           </Form>
         )}

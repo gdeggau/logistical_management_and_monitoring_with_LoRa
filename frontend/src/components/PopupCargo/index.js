@@ -9,25 +9,25 @@ function PopupCargo({ cargo }) {
     <div>
       <CargoNumber>{cargo.cargo_number}</CargoNumber>
       <Driver>
-        <span>{`Driver: ${cargo.driver.full_name}`}</span>
+        <span>{`Motorista: ${cargo.driver.full_name}`}</span>
         <br />
-        <span>{`Telephone: ${cargo.driver.telephone}`}</span>
+        <span>{`Celular: ${cargo.driver.telephone}`}</span>
         <br />
         <span>{`${cargo.vehicle.license_plate} - ${cargo.vehicle.reference}`}</span>
       </Driver>
       <OtherInfos>
-        <span>Started at: {dateFormat(cargo.delivery_date_leave)}</span>
+        <span>Saída: {dateFormat(cargo.delivery_date_leave)}</span>
         <br />
         {cargo.status === 'ONDELIVERY' && (
           <div>
             <span>
-              Plan return: {dateFormat(cargo.plan_delivery_date_return)}
+              Retorno plan.: {dateFormat(cargo.plan_delivery_date_return)}
             </span>
           </div>
         )}
         {cargo.status === 'FINISHED' && (
           <div>
-            <span>Returned: {dateFormat(cargo.delivery_date_return)}</span>
+            <span>Retorno: {dateFormat(cargo.delivery_date_return)}</span>
           </div>
         )}
       </OtherInfos>
@@ -36,13 +36,13 @@ function PopupCargo({ cargo }) {
         <br />
         {cargo.observation && (
           <div>
-            <small className="text-muted">{`Observation: ${cargo.observation}`}</small>
+            <small className="text-muted">{`Observação: ${cargo.observation}`}</small>
           </div>
         )}
         <small className="text-muted">
-          {`Last location: ${format(
+          {`Última local.: ${format(
             parseISO(cargo.vehicle_geolocations[0].created_at),
-            'MM/dd/yyyy HH:mm:ss'
+            'dd/MM/yyyy HH:mm:ss'
           )}`}
         </small>
       </span>

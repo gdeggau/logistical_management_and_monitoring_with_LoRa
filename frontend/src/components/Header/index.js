@@ -41,7 +41,7 @@ export default function Header() {
         <nav>
           <FaSignOutAlt size="15px" color="#fff" />
           <Link to="/" onClick={handleClick}>
-            Sign Out
+            Sair
           </Link>
         </nav>
       </Content>

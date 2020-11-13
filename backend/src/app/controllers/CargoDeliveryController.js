@@ -227,7 +227,9 @@ class CargoDeliveryController {
   }
 
   async index(req, res) {
-    const { cargo_number, status } = req.query;
+    let { cargo_number, status } = req.query;
+
+    cargo_number = cargo_number ? cargo_number.toUpperCase() : cargo_number;
 
     let filterStatus;
 

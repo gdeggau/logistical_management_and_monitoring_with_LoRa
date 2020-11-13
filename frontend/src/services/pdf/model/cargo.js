@@ -168,32 +168,34 @@ export default function PdfDocument(props) {
         <View style={styles.header}>
           <Text
             style={styles.title}
-          >{`CARGO PACKING LIST: ${cargo.cargo_number}`}</Text>
+          >{`FICHA DE ROMANEIO: ${cargo.cargo_number}`}</Text>
         </View>
         <View style={styles.infosHeader}>
-          <Text style={styles.info}>{`Driver: ${cargo.driver.full_name}`}</Text>
           <Text
             style={styles.info}
-          >{`Telephone: ${cargo.driver.telephone}`}</Text>
+          >{`Motorista: ${cargo.driver.full_name}`}</Text>
+          <Text
+            style={styles.info}
+          >{`Celular: ${cargo.driver.telephone}`}</Text>
           <Text style={styles.info}>{`Status: ${cargo.status}`}</Text>
-          <Text style={styles.info}>{`Observation: ${cargo.observation}`}</Text>
+          <Text style={styles.info}>{`Observação: ${cargo.observation}`}</Text>
         </View>
         <View style={styles.infosHeader}>
-          <Text style={styles.info}>{`Planned delivery: ${dateFormat(
+          <Text style={styles.info}>{`Saída planejada: ${dateFormat(
             cargo.plan_delivery_date_leave || ''
           )}`}</Text>
           {cargo.delivery_date_leave && (
-            <Text style={styles.info}>{`Delivery leaved: ${dateFormat(
+            <Text style={styles.info}>{`Saída: ${dateFormat(
               cargo.delivery_date_leave || ''
             )}`}</Text>
           )}
         </View>
         <View style={styles.infosHeader}>
-          <Text style={styles.info}>{`Planned return: ${dateFormat(
+          <Text style={styles.info}>{`Retorno planejado: ${dateFormat(
             cargo.plan_delivery_date_return || ''
           )}`}</Text>
           {cargo.delivery_date_return && (
-            <Text style={styles.info}>{`Delivery returned: ${dateFormat(
+            <Text style={styles.info}>{`Retorno: ${dateFormat(
               cargo.delivery_date_return || ''
             )}`}</Text>
           )}
@@ -205,7 +207,7 @@ export default function PdfDocument(props) {
                 <Text style={styles.tableCellHeader}>Barcode</Text>
               </View>
               <View style={styles.tableColHeader}>
-                <Text style={styles.tableCellHeader}>Vehicle</Text>
+                <Text style={styles.tableCellHeader}>Veículo</Text>
               </View>
             </View>
             <View style={styles.tableRow}>
@@ -215,7 +217,7 @@ export default function PdfDocument(props) {
               <View style={styles.tableCol}>
                 <Text
                   style={styles.tableCell}
-                >{`Brand: ${cargo.vehicle.brand}\nModel: ${cargo.vehicle.model}\nLicense plate: ${cargo.vehicle.license_plate}\nDevice: ${cargo.vehicle.device.name}\nReference: ${cargo.vehicle.reference}`}</Text>
+                >{`Marca: ${cargo.vehicle.brand}\nModelo: ${cargo.vehicle.model}\nPlaca: ${cargo.vehicle.license_plate}\nDispositivo: ${cargo.vehicle.device.name}\nReferência: ${cargo.vehicle.reference}`}</Text>
               </View>
             </View>
           </View>
@@ -225,10 +227,10 @@ export default function PdfDocument(props) {
                 <Text style={styles.tableCellHeader}>Barcode</Text>
               </View>
               <View style={styles.tableColHeaderOrder}>
-                <Text style={styles.tableCellHeader}>Address</Text>
+                <Text style={styles.tableCellHeader}>Endereço</Text>
               </View>
               <View style={styles.tableColHeaderOrder}>
-                <Text style={styles.tableCellHeader}>Client</Text>
+                <Text style={styles.tableCellHeader}>Cliente</Text>
               </View>
               <View style={styles.tableColHeaderOrder}>
                 <Text style={styles.tableCellHeader}>Status</Text>
@@ -249,12 +251,12 @@ export default function PdfDocument(props) {
                   </View>
                   <View style={styles.tableColOrder}>
                     <Text style={styles.tableCell}>
-                      {`Order number: ${order.order_number}\nName: ${order.user.full_name}\nTelephone: ${order.user.telephone}\nSignature:\n___________________`}
+                      {`Pedido: ${order.order_number}\nNome: ${order.user.full_name}\nCelular: ${order.user.telephone}\nAssinatura:\n___________________`}
                     </Text>
                   </View>
                   <View style={styles.tableColOrder}>
                     <Text style={styles.tableCell}>
-                      {`DELIVERED:____\nRETURNED:____\nObservation:`}
+                      {`DELIVERED:____\nRETURNED:____\nObservação:`}
                     </Text>
                   </View>
                 </View>
@@ -262,12 +264,12 @@ export default function PdfDocument(props) {
             })}
           </View>
           <View style={styles.infosHeader}>
-            <Text style={styles.info}>{`Date: ${format(
+            <Text style={styles.info}>{`Data: ${format(
               new Date(),
-              'MM/dd/yyyy HH:mm:ss'
+              'dd/MM/yyyy HH:mm:ss'
             )}`}</Text>
             <Text style={styles.info}>
-              Driver's signature:_______________________________
+              Assinatura do motorista:____________________________
             </Text>
           </View>
         </View>

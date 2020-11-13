@@ -156,36 +156,36 @@ class CargoController {
         });
       }
 
-      const checkDriverOrVehicleIsOnDelivery = await Cargo.findOne(
-        {
-          where: {
-            [Op.and]: [
-              {
-                [Op.or]: [
-                  {
-                    driver_id: req.body.driver_id,
-                  },
-                  {
-                    vehicle_id: req.body.vehicle_id,
-                  },
-                ],
-              },
-              {
-                status: StatusCargo.ONDELIVERY.value,
-              },
-            ],
-          },
-        },
-        { transaction }
-      );
+      // const checkDriverOrVehicleIsOnDelivery = await Cargo.findOne(
+      //   {
+      //     where: {
+      //       [Op.and]: [
+      //         {
+      //           [Op.or]: [
+      //             {
+      //               driver_id: req.body.driver_id,
+      //             },
+      //             {
+      //               vehicle_id: req.body.vehicle_id,
+      //             },
+      //           ],
+      //         },
+      //         {
+      //           status: StatusCargo.ONDELIVERY.value,
+      //         },
+      //       ],
+      //     },
+      //   },
+      //   { transaction }
+      // );
 
-      if (checkDriverOrVehicleIsOnDelivery) {
-        await transaction.rollback();
-        return res.status(400).json({
-          error: 'Driver or vehicle is on delivery!',
-        });
-        // return res.json(checkAvailabilityDriverOrVehicle);
-      }
+      // if (checkDriverOrVehicleIsOnDelivery) {
+      //   await transaction.rollback();
+      //   return res.status(400).json({
+      //     error: 'Driver or vehicle is on delivery!',
+      //   });
+      //   // return res.json(checkAvailabilityDriverOrVehicle);
+      // }
 
       const cargo = await Cargo.create(
         {
@@ -457,7 +457,7 @@ class CargoController {
   async index(req, res) {
     const { cargo_number } = req.query;
     const filterCargoNumber = cargo_number
-      ? { [Op.eq]: cargo_number }
+      ? { [Op.eq]: cargo_number.toUpperCase() }
       : { [Op.not]: null };
 
     let transaction;
@@ -480,6 +480,7 @@ class CargoController {
           'status',
           'observation',
           'createdAt',
+          'updatedAt',
         ],
         include: [
           {

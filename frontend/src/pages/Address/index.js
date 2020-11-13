@@ -14,31 +14,31 @@ function Address() {
   const columns = useMemo(
     () => [
       {
-        Header: 'Zip Code',
+        Header: 'CEP',
         accessor: 'cep',
       },
       {
-        Header: 'Street',
+        Header: 'Rua',
         accessor: 'address',
       },
       {
-        Header: 'Number',
+        Header: 'Número',
         accessor: 'number',
       },
       {
-        Header: 'Complement',
+        Header: 'Complemento',
         accessor: 'complement',
       },
       {
-        Header: 'District',
+        Header: 'Bairro',
         accessor: 'district',
       },
       {
-        Header: 'City',
+        Header: 'Cidade',
         accessor: 'city',
       },
       {
-        Header: 'State',
+        Header: 'Estado',
         accessor: 'state',
       },
       // {
@@ -46,13 +46,13 @@ function Address() {
       //   accessor: ({ active }) => active.toString(),
       // },
       {
-        Header: 'Main',
+        Header: 'Principal',
         accessor: ({ main_adress }) => (main_adress ? 'YES' : 'NO'),
         Filter: SelectColumnFilter,
         filter: 'equals',
       },
       {
-        Header: 'Actions',
+        Header: 'Ações',
         Cell: ({ row }) => {
           return (
             <div
@@ -84,12 +84,15 @@ function Address() {
     async function loadAdresses() {
       const response = await api.get('/adresses/user');
 
-      const adresses = response.data.adresses.map((adrss) => {
-        const { options, ...rest } = adrss;
-        return Object.assign(rest, options);
-      });
+      let adresses = [];
+      if (response.data) {
+        adresses = response.data.adresses.map((adrss) => {
+          const { options, ...rest } = adrss;
+          return Object.assign(rest, options);
+        });
+      }
 
-      setAddress([...adresses]);
+      setAddress(adresses);
     }
 
     loadAdresses();
@@ -107,7 +110,7 @@ function Address() {
         {/* {renderTable()} */}
         <TableContainer columns={columns} data={address} size="sm" />
         <Link to="/adresses/new">
-          <Button color="primary">New address</Button>
+          <Button color="primary">Novo endereço</Button>
         </Link>
       </>
     </Wrapper>

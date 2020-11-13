@@ -29,7 +29,7 @@ export default function Routes() {
       <Route path="/" exact component={SignIn} />
       <Route path="/register" component={SignUp} />
 
-      <Route path="/profile" exact component={Profile} isPrivate />
+      <Route path="/profile" component={Profile} isPrivate />
 
       <Route path="/adresses" exact component={Address} isPrivate />
       <Route path="/adresses/new" exact component={AddressNew} isPrivate />
@@ -61,7 +61,7 @@ export default function Routes() {
         isPrivate
         isAdmin
       />
-      <Route path="/monitoring" component={Monitoring} isPrivate isAdmin />
+      <Route path="/tracking" component={Monitoring} isPrivate isAdmin />
       <Route path="/users" exact component={User} isPrivate isAdmin />
       <Route path="/users/new" exact component={UserNew} isPrivate isAdmin />
       <Route path="/cargos" exact component={Cargo} isPrivate isAdmin />

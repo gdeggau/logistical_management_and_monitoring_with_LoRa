@@ -61,26 +61,26 @@ function Cargo() {
         disableSortBy: true,
       },
       {
-        Header: 'Number',
+        Header: 'Número',
         accessor: 'cargo_number',
       },
       {
-        Header: 'Driver',
+        Header: 'Motorista',
         accessor: ({ driver }) => `${driver.name} ${driver.last_name}`,
       },
       {
-        Header: 'Vehicle',
+        Header: 'Veículo',
         accessor: ({ vehicle }) =>
           `${vehicle.license_plate} - ${vehicle.reference}`,
         Filter: SelectColumnFilter,
         filter: 'equals',
       },
       {
-        Header: 'Orders',
+        Header: 'Pedidos',
         accessor: ({ orders }) => orders.length,
       },
       {
-        Header: 'Plan delivery',
+        Header: 'Saída plan.',
         accessor: ({ plan_delivery_date_leave, delivery_date_leave, status }) =>
           changeColorDate(
             plan_delivery_date_leave,
@@ -89,17 +89,17 @@ function Cargo() {
           ),
       },
       {
-        Header: 'Plan return',
+        Header: 'Retorno plan.',
         accessor: ({ plan_delivery_date_return }) =>
           dateFormat(plan_delivery_date_return || ''),
       },
       {
-        Header: 'Delivery leaved',
+        Header: 'Saída',
         accessor: ({ delivery_date_leave }) =>
           dateFormat(delivery_date_leave || ''),
       },
       {
-        Header: 'Delivery returned',
+        Header: 'Retorno',
         accessor: ({ delivery_date_return }) =>
           dateFormat(delivery_date_return || ''),
       },
@@ -119,15 +119,15 @@ function Cargo() {
         filter: 'equals',
       },
       {
-        Header: 'Observation',
+        Header: 'Observação',
         accessor: 'observation',
       },
       {
-        Header: 'Created at',
-        accessor: ({ createdAt }) => dateFormat(createdAt),
+        Header: 'Última att.',
+        accessor: ({ updatedAt }) => dateFormat(updatedAt || ''),
       },
       {
-        Header: 'Actions',
+        Header: 'Ações',
         accessor: () => {
           return (
             <div
@@ -172,7 +172,7 @@ function Cargo() {
         {cargos === undefined && <Loading />}
         <TableContainer columns={columns} data={cargos} size="sm" />
         <Link to="/cargos/new">
-          <Button color="primary">New cargo</Button>
+          <Button color="primary">Nova carga</Button>
         </Link>
         {/* <ReactTable data={cargos} columns={columns} /> */}
       </>

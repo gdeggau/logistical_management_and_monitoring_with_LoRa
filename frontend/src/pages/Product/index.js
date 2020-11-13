@@ -14,24 +14,24 @@ function Product() {
   const columns = useMemo(
     () => [
       {
-        Header: 'Product name',
+        Header: 'Produto',
         accessor: 'name',
       },
       {
-        Header: 'Description',
+        Header: 'Descrição',
         accessor: 'description',
       },
       {
-        Header: 'Price',
+        Header: 'Preço',
         accessor: ({ price }) => `R$ ${price}`,
       },
 
       {
-        Header: 'Created at',
+        Header: 'Criado em',
         accessor: ({ createdAt }) => dateFormat(createdAt || ''),
       },
       {
-        Header: 'Actions',
+        Header: 'Ações',
         accessor: () => {
           return (
             <div
@@ -72,7 +72,7 @@ function Product() {
       <>
         <TableContainer columns={columns} data={products} size="sm" />
         <Link to="/products/new">
-          <Button color="primary">New product</Button>
+          <Button color="primary">Novo produto</Button>
         </Link>
       </>
     </Wrapper>

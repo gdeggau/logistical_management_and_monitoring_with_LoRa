@@ -43,10 +43,12 @@ function Catalog() {
         api.get('/adresses/user'),
       ]);
 
-      const mainAddress = adresses.data.adresses.find(
-        (address) => address.options.main_adress === true
-      );
-
+      let mainAddress = null;
+      if (adresses.data) {
+        mainAddress = adresses.data.adresses.find(
+          (address) => address.options.main_adress === true
+        );
+      }
       setProduct([...products.data]);
       setAddress(mainAddress);
     }
@@ -95,9 +97,7 @@ function Catalog() {
       return (
         <Modal isOpen={modal} toggle={toggle}>
           <Form onSubmit={handleSubmit}>
-            <ModalHeader toggle={toggle}>
-              You are finishing your purchase...
-            </ModalHeader>
+            <ModalHeader toggle={toggle}>Finalizando a compra...</ModalHeader>
             <ModalBody>
               <Container fluid>
                 <Row>
@@ -120,7 +120,7 @@ function Catalog() {
                       </Row>
                       <Row>
                         <Col>
-                          <span>Freight:</span>
+                          <span>Frete:</span>
                         </Col>
                         <Col>
                           <span>{`R$ ${freight}`}</span>
@@ -128,7 +128,9 @@ function Catalog() {
                       </Row>
                       <Row className="align-items-center">
                         <Col>
-                          <span style={{ fontWeight: 'bold' }}>Quantity:</span>
+                          <span style={{ fontWeight: 'bold' }}>
+                            Quantidade:
+                          </span>
                         </Col>
                         <Col>
                           <Input
@@ -162,13 +164,13 @@ function Catalog() {
                   }}
                 >
                   <Col>
-                    <span>Main address</span>
+                    <span>Endereço principal</span>
                   </Col>
                   <Col>
-                    <Link to="/adresses">Edit your adresses</Link>
+                    <Link to="/adresses">Meus endereços</Link>
                   </Col>
                 </Row>
-                {address !== undefined && (
+                {address !== null && (
                   <>
                     <Row>
                       <Col>
@@ -208,7 +210,7 @@ function Catalog() {
                         className="text-warning"
                         style={{ fontWeight: 'bold' }}
                       >
-                        You need first create an address!
+                        Você precisa possuir ao menos um endereço principal!
                       </span>
                     </Col>
                   </Row>
@@ -230,7 +232,7 @@ function Catalog() {
                 type="submit"
                 onClick={() => toggle(prod)}
               >
-                Purchase
+                Comprar
               </Button>{' '}
             </ModalFooter>
           </Form>
@@ -276,7 +278,7 @@ function Catalog() {
       );
     }
 
-    return <div>Loading...</div>;
+    return <div>Carregando...</div>;
   }
 
   return <Container fluid>{renderCatalog()}</Container>;

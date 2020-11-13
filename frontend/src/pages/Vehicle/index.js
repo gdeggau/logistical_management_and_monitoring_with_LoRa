@@ -14,31 +14,31 @@ function Vehicle() {
   const columns = useMemo(
     () => [
       {
-        Header: 'License plate',
+        Header: 'Placa',
         accessor: 'license_plate',
       },
       {
-        Header: 'Reference',
+        Header: 'Referência',
         accessor: 'reference',
       },
       {
-        Header: 'Model',
+        Header: 'Modelo',
         accessor: 'model',
       },
       {
-        Header: 'Brand',
+        Header: 'Marca',
         accessor: 'brand',
       },
       {
-        Header: 'Actual device',
+        Header: 'Dispositivo atual',
         accessor: ({ device }) => (device ? `${device.name}` : ''),
       },
       {
-        Header: 'Created at',
+        Header: 'Criado em',
         accessor: ({ created_at }) => dateFormat(created_at || ''),
       },
       {
-        Header: 'Actions',
+        Header: 'Ações',
         accessor: () => {
           return (
             <div
@@ -79,7 +79,7 @@ function Vehicle() {
       <>
         <TableContainer columns={columns} data={vehicle} size="sm" />
         <Link to="/vehicles/new">
-          <Button color="primary">New vehicle</Button>
+          <Button color="primary">Novo veículo</Button>
         </Link>
       </>
     </Wrapper>

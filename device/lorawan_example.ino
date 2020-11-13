@@ -83,7 +83,6 @@ const int BAUD_RATE = 9600;
 int32_t lat = 0;
 int32_t lon = 0;
 
-
 static void prepareTxFrame( uint8_t port )
 {
     appDataSize = 8;//AppDataSize max value is 64
@@ -96,16 +95,6 @@ static void prepareTxFrame( uint8_t port )
     appData[5] = (lon >> 16) & 0xFF;
     appData[6] = (lon >> 8) & 0xFF;
     appData[7] = lon & 0xFF;
-}
-
-static void smartDelay(unsigned long ms)
-{
-  unsigned long start = millis();
-  do 
-  {
-    while (ss.available())
-      gps.encode(ss.read());
-  } while (millis() - start < ms);
 }
 
 static void setLatitudeLongitude()
@@ -178,9 +167,12 @@ void loop()
   {
     case DEVICE_STATE_INIT:
     {
-      Display.clear(); 
+      Display.clear();
+      Serial.println("ANTES INICIAR");
+      //Serial.println(deviceState); 
       LoRaWAN.init(loraWanClass,loraWanRegion);
       Serial.println("INICIANDO");
+      //Serial.println(deviceState);
       break;
     }
     case DEVICE_STATE_JOIN:
@@ -191,6 +183,7 @@ void loop()
 //      LoRaWAN.Display.oining();
       LoRaWAN.join();
       Serial.println("CONECTANDO A KORE");
+      //Serial.println(deviceState);
       break;
     }
     case DEVICE_STATE_SEND:
@@ -204,9 +197,9 @@ void loop()
 //        LoRaWAN.Display.ending();
         Display.drawString(0, 30, "SENDING...");
         Serial.println("ENVIANDO");
-        appTxDutyCycle = 300000;
         prepareTxFrame( appPort );
         LoRaWAN.send(loraWanClass);
+        appTxDutyCycle = 300000;
       }else{
         Display.drawString(0, 30, "TRYING AGAIN IN 60S");
         appTxDutyCycle = 60000;
@@ -214,22 +207,25 @@ void loop()
       Display.display();
       deviceState = DEVICE_STATE_CYCLE;
       Serial.println("SETOU PARA CICLO");
+      //Serial.println(deviceState);
       break;
     }
     case DEVICE_STATE_CYCLE:
     {
       Serial.println("ENTROU NO CYCLE");
+      //Serial.println(deviceState);
       // Schedule next packet transmission
-      txDutyCycleTime = appTxDutyCycle + randr( -APP_TX_DUTYCYCLE_RND, APP_TX_DUTYCYCLE_RND );
+      txDutyCycleTime = appTxDutyCycle; //+ randr( -APP_TX_DUTYCYCLE_RND, APP_TX_DUTYCYCLE_RND );
       LoRaWAN.cycle(txDutyCycleTime);
       deviceState = DEVICE_STATE_SLEEP;
       Serial.println("SETOU PARA SLEEP");
+      //Serial.println(deviceState);
       break;
     }
     case DEVICE_STATE_SLEEP:
     {
       Display.clear();
-//      Serial.println("SLEEP");
+      //Serial.println("SLEEP");
       Display.drawString(0, 30, "SLEEPING...");
       Display.display();
 //      LoRaWAN.Display.ck();

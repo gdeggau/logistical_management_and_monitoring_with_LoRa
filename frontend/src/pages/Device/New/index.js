@@ -22,7 +22,7 @@ function DeviceNew() {
         }}
         validationSchema={Yup.object().shape({
           name: Yup.string().required('Name is required'),
-          label: Yup.string().required('Device label is required'),
+          label: Yup.string().required('Rótulo é necessário'),
           device_identifier: Yup.string()
             .required('Device EUI is required')
             .min(16, 'DevEUI must be a 8 bytes hex!'),
@@ -31,7 +31,7 @@ function DeviceNew() {
           try {
             await api.post('/devices', values);
 
-            toast.success(`New device created!`, {
+            toast.success(`Novo dispositivo criado!`, {
               autoClose: 5000,
             });
 
@@ -49,21 +49,21 @@ function DeviceNew() {
           <Form onSubmit={formik.handleSubmit}>
             <FormGroup row>
               <Col>
-                <LabelStyled>Device name:</LabelStyled>
+                <LabelStyled>Nome:</LabelStyled>
                 <InputStyled name="name" {...formik.getFieldProps('name')} />
                 <Error name="name" />
               </Col>
             </FormGroup>
             <FormGroup row>
               <Col>
-                <LabelStyled>Device label:</LabelStyled>
+                <LabelStyled>Rótulo:</LabelStyled>
                 <InputStyled name="label" {...formik.getFieldProps('label')} />
                 <Error name="label" />
               </Col>
             </FormGroup>
             <FormGroup row>
               <Col>
-                <LabelStyled>Device EUI:</LabelStyled>
+                <LabelStyled>DevEUI:</LabelStyled>
                 <InputStyled
                   name="device_identifier"
                   maxLength={16}
@@ -74,7 +74,7 @@ function DeviceNew() {
             </FormGroup>
             <FormGroup row>
               <Col>
-                <LabelStyled>Description:</LabelStyled>
+                <LabelStyled>Descrição:</LabelStyled>
                 <InputStyled
                   name="description"
                   {...formik.getFieldProps('description')}
@@ -86,10 +86,10 @@ function DeviceNew() {
               color="primary"
               disabled={formik.isSubmitting}
             >
-              Create
+              Salvar
             </Button>{' '}
             <Button color="secondary" onClick={() => history.push('/devices')}>
-              Cancel
+              Cancelar
             </Button>
           </Form>
         )}

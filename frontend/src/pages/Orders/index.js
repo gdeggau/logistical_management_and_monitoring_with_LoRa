@@ -53,7 +53,7 @@ function Orders() {
                     // marginBottom: '10px',
                   }}
                 >
-                  <span style={{ fontWeight: 'bold' }}>Order summary:</span>
+                  <span style={{ fontWeight: 'bold' }}>Resumo do pedido:</span>
                 </Col>
               </Row>
               <Row>
@@ -65,7 +65,7 @@ function Orders() {
               </Row>
               <Row>
                 <Col>
-                  <span>Price:</span>
+                  <span>Preço:</span>
                 </Col>
                 <Col>
                   <span>{`R$ ${orderSelected.product.price}`}</span>
@@ -73,7 +73,7 @@ function Orders() {
               </Row>
               <Row>
                 <Col>
-                  <span>Quantity:</span>
+                  <span>Quantidade:</span>
                 </Col>
                 <Col>
                   <span>{orderSelected.quantity}</span>
@@ -81,7 +81,7 @@ function Orders() {
               </Row>
               <Row>
                 <Col>
-                  <span>Freight:</span>
+                  <span>Frete:</span>
                 </Col>
                 <Col>
                   <span>{`R$ ${orderSelected.freight}`}</span>
@@ -110,7 +110,9 @@ function Orders() {
                     marginTop: '10px',
                   }}
                 >
-                  <span style={{ fontWeight: 'bold' }}>Delivery address:</span>
+                  <span style={{ fontWeight: 'bold' }}>
+                    Endereço de entrega:
+                  </span>
                 </Col>
               </Row>
               <Row>
@@ -155,7 +157,7 @@ function Orders() {
                     marginTop: '10px',
                   }}
                 >
-                  <span style={{ fontWeight: 'bold' }}>Order status:</span>
+                  <span style={{ fontWeight: 'bold' }}>Status do pedido:</span>
                 </Col>
               </Row>
 
@@ -215,17 +217,18 @@ function Orders() {
               <div style={{ marginRight: '30px' }}>
                 <Label check>
                   <Input type="radio" name="option" value="MY" defaultChecked />{' '}
-                  My orders
+                  Meus pedidos
                 </Label>
               </div>
               <div style={{ marginRight: '10px' }}>
                 <Label check>
-                  <Input type="radio" name="option" value="ALL" /> All orders
+                  <Input type="radio" name="option" value="ALL" /> Todos os
+                  pedidos
                 </Label>
               </div>
               <div>
                 <Button size="sm" type="submit" color="primary">
-                  Search
+                  Pesquisar
                 </Button>
               </div>
             </FormGroup>
@@ -251,15 +254,15 @@ function Orders() {
         },
       },
       {
-        Header: 'Number',
+        Header: 'Pedido',
         accessor: 'order_number',
       },
       {
-        Header: 'Product',
+        Header: 'Produto',
         accessor: ({ product }) => product.name,
       },
       {
-        Header: 'Quantity',
+        Header: 'Quantidade',
         accessor: 'quantity',
       },
       {
@@ -289,7 +292,7 @@ function Orders() {
       //   disableFilters: true,
       // },
       {
-        Header: 'Ordered date',
+        Header: 'Data do pedido',
         accessor: ({ created_at }) => dateFormat(created_at || ''),
         // disableFilters: true,
       },

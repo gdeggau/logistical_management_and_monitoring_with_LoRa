@@ -160,9 +160,9 @@ const TableContainer = ({
           </Button>
         </Col>
         <Col md={2} style={{ marginTop: 7, color: '#fff' }}>
-          Page{' '}
+          Página{' '}
           <strong>
-            {pageIndex + 1} of {pageOptions.length}
+            {pageIndex + 1} de {pageOptions.length}
           </strong>
         </Col>
         <Col md={2}>

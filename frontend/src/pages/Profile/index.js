@@ -45,12 +45,12 @@ export default function Profile() {
             {/* </div> */}
             <FormGroup row>
               <Col sm={6}>
-                <LabelStyled>Name:</LabelStyled>
+                <LabelStyled>Nome:</LabelStyled>
                 <InputStyled name="name" {...formik.getFieldProps('name')} />
                 <Error name="name" />
               </Col>
               <Col sm={6}>
-                <LabelStyled>Last name:</LabelStyled>
+                <LabelStyled>Sobrenome:</LabelStyled>
                 <InputStyled
                   name="last_name"
                   {...formik.getFieldProps('last_name')}
@@ -69,7 +69,7 @@ export default function Profile() {
                 <Error name="email" />
               </Col>
               <Col sm={4}>
-                <LabelStyled>Telephone:</LabelStyled>
+                <LabelStyled>Celular:</LabelStyled>
                 <InputStyled
                   name="telephone"
                   mask="(99) 9 9999-9999"
@@ -84,7 +84,7 @@ export default function Profile() {
             />
             <FormGroup row>
               <Col>
-                <LabelStyled>Old password:</LabelStyled>
+                <LabelStyled>Senha atual:</LabelStyled>
                 <InputStyled
                   name="oldPassword"
                   type="password"
@@ -95,7 +95,7 @@ export default function Profile() {
             </FormGroup>
             <FormGroup row>
               <Col>
-                <LabelStyled>Password:</LabelStyled>
+                <LabelStyled>Nova senha:</LabelStyled>
                 <InputStyled
                   name="password"
                   type="password"
@@ -106,7 +106,7 @@ export default function Profile() {
             </FormGroup>
             <FormGroup row>
               <Col>
-                <LabelStyled>Confirm password:</LabelStyled>
+                <LabelStyled>Confirmar nova senha:</LabelStyled>
                 <InputStyled
                   name="confirmPassword"
                   type="password"
@@ -128,7 +128,7 @@ export default function Profile() {
               placeholder="Confirm password"
             /> */}
             <Button color="primary" type="submit">
-              Save
+              Salvar
             </Button>
           </Form>
         )}

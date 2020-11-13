@@ -161,14 +161,14 @@ function AddressNew({ match }) {
                 <div
                   style={{ display: 'flex', justifyContent: 'space-between' }}
                 >
-                  <LabelStyled>Zip Code: </LabelStyled>{' '}
+                  <LabelStyled>CEP: </LabelStyled>{' '}
                   <Label size="sm">
                     <Link
                       href="http://www.buscacep.correios.com.br/sistemas/buscacep/default.cfm"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      Do not know your ZIP Code?
+                      Não conheçe seu CEP?
                     </Link>
                   </Label>
                 </div>
@@ -191,7 +191,7 @@ function AddressNew({ match }) {
                 {!id && <AutoCompleteForm />}
               </Col>
               <Col sm={4}>
-                <LabelStyled>City:</LabelStyled>
+                <LabelStyled>Cidade:</LabelStyled>
                 <InputStyled
                   disabled
                   name="city"
@@ -200,7 +200,7 @@ function AddressNew({ match }) {
                 <Error name="city" />
               </Col>
               <Col sm={4}>
-                <LabelStyled>State: </LabelStyled>
+                <LabelStyled>Estado: </LabelStyled>
                 <InputStyled
                   disabled
                   name="state"
@@ -222,7 +222,7 @@ function AddressNew({ match }) {
             </FormGroup>
             <FormGroup row>
               <Col sm={4}>
-                <LabelStyled>Number:</LabelStyled>
+                <LabelStyled>Número:</LabelStyled>
                 <InputStyled
                   name="number"
                   type="number"
@@ -232,7 +232,7 @@ function AddressNew({ match }) {
                 <Error name="number" />
               </Col>
               <Col sm={8}>
-                <LabelStyled>Complement:</LabelStyled>
+                <LabelStyled>Complemento:</LabelStyled>
                 <InputStyled
                   name="complement"
                   {...formik.getFieldProps('complement')}
@@ -242,7 +242,7 @@ function AddressNew({ match }) {
             </FormGroup>
             <FormGroup row>
               <Col sm={5}>
-                <LabelStyled>Street:</LabelStyled>
+                <LabelStyled>Rua:</LabelStyled>
                 <InputStyled
                   disabled
                   name="address"
@@ -251,7 +251,7 @@ function AddressNew({ match }) {
                 <Error name="address" />
               </Col>
               <Col sm={5}>
-                <LabelStyled>District:</LabelStyled>
+                <LabelStyled>Bairro:</LabelStyled>
                 <InputStyled
                   disabled
                   name="district"
@@ -260,7 +260,7 @@ function AddressNew({ match }) {
                 <Error name="district" />
               </Col>
               <Col sm={2}>
-                <LabelStyled>Main:</LabelStyled>
+                <LabelStyled>Principal:</LabelStyled>
                 <InputStyled
                   name="main_adress"
                   type="select"
@@ -281,10 +281,10 @@ function AddressNew({ match }) {
               type="submit"
               disabled={formik.isSubmitting}
             >
-              Save
+              Salvar
             </Button>{' '}
             <Button color="secondary" onClick={() => history.push('/adresses')}>
-              Cancel
+              Cancelar
             </Button>
           </Form>
         )}

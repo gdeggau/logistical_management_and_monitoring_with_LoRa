@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon src/server.js",
-    "tunnel": "npx localtunnel --port 3333 --subdomain deggautcc -o --print-requests"
+    "tunnel": "src/scripts/tunnel.sh",
+    "tunnel_old": "npx localtunnel --port 3333 --subdomain deggautcc -o --print-requests"
   },
   "dependencies": {
     "@sentry/node": "5.19.2",

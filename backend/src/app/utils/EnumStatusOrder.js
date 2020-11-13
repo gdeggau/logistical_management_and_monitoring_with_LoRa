@@ -1,16 +1,16 @@
 export default {
   PENDING: {
     value: 'PENDING',
-    description: 'New order! Waiting to be inserted in a cargo.',
+    description: 'Novo pedido! Aguardando para ser colocado em uma carga.',
   },
-  ONCARGO: { value: 'ONCARGO', description: 'Waiting for delivery.' },
-  ONDELIVERY: { value: 'ONDELIVERY', description: 'Order on delivery.' },
+  ONCARGO: { value: 'ONCARGO', description: 'Aguardando entrega.' },
+  ONDELIVERY: { value: 'ONDELIVERY', description: 'Pedido em entrega.' },
   DELIVERED: {
     value: 'DELIVERED',
-    description: 'Order was delivered.',
+    description: 'Pedido foi entregue.',
   },
   RETURNED: {
     value: 'RETURNED',
-    description: 'Order returned, provide a new cargo.',
+    description: 'Pedido retornou, necessário colocar em uma nova carga.',
   },
 };

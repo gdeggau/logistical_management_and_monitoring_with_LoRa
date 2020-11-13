@@ -22,6 +22,7 @@ import api from '~/services/api';
 
 import PopupOrder from '~/components/PopupOrder';
 import PopupCargo from '~/components/PopupCargo';
+import PopupRouteLocation from '~/components/PopupRouteLocation';
 
 const InputStyled = ({ ...rest }) => {
   return (
@@ -42,6 +43,7 @@ const InputStyled = ({ ...rest }) => {
 function Monitoring() {
   const [selectedCargo, setSelectedCargo] = useState(null);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [selectedRouteLocation, setSelectedRouteLocation] = useState(null);
   const [showRouteSelected, setShowRouteSelected] = useState(0);
   // const [tooltipOpen, setTooltipOpen] = useState(false);
   const [statusCargo, setStatusCargo] = useState();
@@ -49,6 +51,7 @@ function Monitoring() {
   // const [cargosWithoutGeolocation, setCargosWithoutGeolocation] = useState([]);
   const [popoverCargoOpen, setPopoverCargoOpen] = useState(false);
   const [popoverOrderOpen, setPopoverOrderOpen] = useState(false);
+  const [popoverRouteOpen, setPopoverRouteOpen] = useState(false);
 
   const [viewport, setViewport] = useState({
     latitude: -26.9230965,
@@ -60,6 +63,7 @@ function Monitoring() {
 
   const toggleCargo = () => setPopoverCargoOpen(!popoverCargoOpen);
   const toggleOrder = () => setPopoverOrderOpen(!popoverOrderOpen);
+  const toggleRoute = () => setPopoverRouteOpen(!popoverRouteOpen);
   const mapRef = useRef();
   const handleViewportChange = useCallback(
     (newViewport) => setViewport(newViewport),
@@ -119,7 +123,7 @@ function Monitoring() {
     }
     options.push(
       <option key={1} value="ALL">
-        Both status
+        Ambos status
       </option>
     );
     return options;
@@ -217,7 +221,14 @@ function Monitoring() {
             latitude={parseFloat(location.latitude)}
             longitude={parseFloat(location.longitude)}
           >
-            <Circle>{count}</Circle>
+            <Circle
+              onClick={() => {
+                setSelectedRouteLocation(location);
+                return toggleRoute();
+              }}
+            >
+              {count}
+            </Circle>
             {/* <BsDot
                 size="25px"
                 color="#00BFFF"
@@ -281,15 +292,17 @@ function Monitoring() {
   function hideElementsOnMap() {
     setPopoverCargoOpen(null);
     setPopoverOrderOpen(null);
+    setPopoverRouteOpen(null);
     setSelectedCargo(null);
     setSelectedOrder(null);
+    setSelectedRouteLocation(null);
   }
 
   function sideBar() {
     return (
       <ContainerFilter>
         <Section>
-          Show route
+          Exibir rota
           <ButtonGroup>
             <Button
               color="primary"
@@ -297,7 +310,7 @@ function Monitoring() {
               onClick={() => setShowRouteSelected(1)}
               active={showRouteSelected === 1}
             >
-              Yes
+              Sim
             </Button>
             <Button
               color="primary"
@@ -305,13 +318,13 @@ function Monitoring() {
               onClick={() => setShowRouteSelected(0)}
               active={showRouteSelected === 0}
             >
-              No
+              Não
             </Button>
           </ButtonGroup>
         </Section>
         {cargosOnDelivery && (
           <Section>
-            Cargos
+            Cargas
             <ListGroup
               style={{ maxHeight: '60vh', overflow: 'auto', width: '100%' }}
             >
@@ -327,8 +340,10 @@ function Monitoring() {
                       // }
                       setSelectedCargo(cargo);
                       setSelectedOrder(null);
+                      setSelectedRouteLocation(null);
                       setPopoverCargoOpen(null);
                       setPopoverOrderOpen(null);
+                      setPopoverRouteOpen(null);
                     }}
                     style={{
                       // width: '100%',
@@ -350,7 +365,7 @@ function Monitoring() {
                         <Row>
                           <Col>
                             <strong className="text-danger">
-                              No geolocation!
+                              Sem localização!
                             </strong>
                           </Col>
                         </Row>
@@ -362,7 +377,7 @@ function Monitoring() {
                       </Row>
                       <Row>
                         <Col>
-                          <small>{`Driver: ${cargo.driver.full_name}`}</small>
+                          <small>{`Motorista: ${cargo.driver.full_name}`}</small>
                         </Col>
                       </Row>
                       {cargo.driver.telephone && (
@@ -379,7 +394,7 @@ function Monitoring() {
                       </Row>
                       <Row>
                         <Col>
-                          <small>{`Started at: ${dateFormat(
+                          <small>{`Saída: ${dateFormat(
                             cargo.delivery_date_leave
                           )}`}</small>
                         </Col>
@@ -387,7 +402,7 @@ function Monitoring() {
                       {cargo.delivery_date_return && (
                         <Row>
                           <Col>
-                            <small>{`Returned: ${dateFormat(
+                            <small>{`Retorno: ${dateFormat(
                               cargo.delivery_date_return
                             )}`}</small>
                           </Col>
@@ -411,7 +426,7 @@ function Monitoring() {
           </Section>
         )}
         <Section>
-          Filters
+          Filtros
           <Formik
             initialValues={{
               cargo_number: '',
@@ -448,12 +463,12 @@ function Monitoring() {
                 </InputStyled>
                 <InputStyled
                   name="cargo_number"
-                  placeholder="Cargo number"
+                  placeholder="Número da carga"
                   maxLength={7}
                   {...formik.getFieldProps('cargo_number')}
                 />
                 <Button size="sm" color="primary" type="submit">
-                  Search
+                  Pesquisar
                 </Button>
               </Form>
             )}
@@ -484,7 +499,7 @@ function Monitoring() {
           mapboxApiAccessToken={process.env.REACT_APP_API_MAPBOX}
           position="top-left"
           countries="br"
-          placeholder="Address"
+          placeholder="Pesquisar endereço"
         />
         {renderRouteFromSelectedCargo()}
         {renderSelectCargoOnMap()}
@@ -512,6 +527,16 @@ function Monitoring() {
             closeOnClick={false}
           >
             <PopupOrder order={selectedOrder} />
+          </Popup>
+        )}
+        {popoverRouteOpen && (
+          <Popup
+            latitude={parseFloat(selectedRouteLocation.latitude)}
+            longitude={parseFloat(selectedRouteLocation.longitude)}
+            closeButton={false}
+            closeOnClick={false}
+          >
+            <PopupRouteLocation routeLocation={selectedRouteLocation} />
           </Popup>
         )}
       </ReactMapGL>

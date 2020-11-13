@@ -22,9 +22,9 @@ function PopupOrder({ order }) {
         )}
       </Address>
       <OtherInfos>
-        <span>Client: {order.user.full_name}</span>
+        <span>Cliente: {order.user.full_name}</span>
         <br />
-        <span>Telephone: {order.user.telephone}</span>
+        <span>Celular: {order.user.telephone}</span>
         <br />
         <span>E-mail: {order.user.email}</span>
         <br />
@@ -35,13 +35,13 @@ function PopupOrder({ order }) {
         <br />
         {order.observation && (
           <div>
-            <small className="text-muted">{`Observation: ${order.observation}`}</small>
+            <small className="text-muted">{`Observação: ${order.observation}`}</small>
           </div>
         )}
         <small className="text-muted">
-          {`Last update: ${format(
+          {`Última att.: ${format(
             parseISO(order.updated_at),
-            'MMM dd yyyy HH:mm:ss'
+            'dd/MM/yyyy HH:mm:ss'
           )}`}
         </small>
       </span>

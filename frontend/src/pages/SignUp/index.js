@@ -78,19 +78,19 @@ export default function SignUp() {
             <Error name="name" />
             <Input
               name="name"
-              placeholder="Name"
+              placeholder="Nome"
               {...formik.getFieldProps('name')}
             />
             <Error name="last_name" />
             <Input
               name="last_name"
-              placeholder="Last name"
+              placeholder="Sobrenome"
               {...formik.getFieldProps('last_name')}
             />
             <Error name="telephone" />
             <Input
               name="telephone"
-              placeholder="Phone number"
+              placeholder="Número de celular"
               mask="(99) 9 9999-9999"
               tag={InputMask}
               {...formik.getFieldProps('telephone')}
@@ -106,17 +106,17 @@ export default function SignUp() {
             <Input
               name="password"
               type="password"
-              placeholder="Password"
+              placeholder="Senha"
               {...formik.getFieldProps('password')}
             />
             <Input
               name="confirmPassword"
               type="password"
-              placeholder="Confirm password"
+              placeholder="Confirmar a senha"
               {...formik.getFieldProps('confirmPassword')}
             />
-            <button type="submit">Create account</button>
-            <Link to="/">I have already an account</Link>
+            <button type="submit">Criar conta</button>
+            <Link to="/">Já possuo uma conta</Link>
           </Form>
         )}
       </Formik>

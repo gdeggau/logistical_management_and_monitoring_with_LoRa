@@ -29,10 +29,12 @@ export default function SignIn() {
       <img src={logo} alt="LoRa" />
       <Form schema={schema} onSubmit={handleSubmit}>
         <Input name="email" type="email" placeholder="E-mail" />
-        <Input name="password" type="password" placeholder="Password" />
+        <Input name="password" type="password" placeholder="Senha" />
 
-        <button type="submit">{loading ? 'Loading...' : 'Sign In'}</button>
-        <Link to="/register">Create an account</Link>
+        <button type="submit">
+          {loading ? 'Carregando...' : 'Fazer login'}
+        </button>
+        <Link to="/register">Criar uma conta</Link>
       </Form>
     </>
   );

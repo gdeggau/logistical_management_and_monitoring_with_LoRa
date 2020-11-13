@@ -30,7 +30,7 @@ function VehicleNew() {
   function renderDevicesToSelect() {
     let options = [
       <option key={1} value={null}>
-        Select a device
+        Selecione um dispositivo
       </option>,
     ];
     if (device !== undefined) {
@@ -62,7 +62,11 @@ function VehicleNew() {
           model: Yup.string().required('Required'),
           reference: Yup.string().required('Required'),
           device_id: Yup.string()
-            .test('device_id', 'Required', (val) => val !== 'Select a device')
+            .test(
+              'device_id',
+              'Required',
+              (val) => val !== 'Selecione um dispositivo'
+            )
             .required('Required'),
         })}
         onSubmit={async (values) => {
@@ -87,7 +91,7 @@ function VehicleNew() {
           <Form onSubmit={formik.handleSubmit}>
             <FormGroup row>
               <Col sm={4}>
-                <LabelStyled>License plate:</LabelStyled>
+                <LabelStyled>Placa:</LabelStyled>
                 <InputStyled
                   name="license_plate"
                   maxLength={8}
@@ -96,19 +100,19 @@ function VehicleNew() {
                 <Error name="license_plate" />
               </Col>
               <Col sm={4}>
-                <LabelStyled>Brand:</LabelStyled>
+                <LabelStyled>Marca:</LabelStyled>
                 <InputStyled name="brand" {...formik.getFieldProps('brand')} />
                 <Error name="brand" />
               </Col>
               <Col sm={4}>
-                <LabelStyled>Model:</LabelStyled>
+                <LabelStyled>Modelo:</LabelStyled>
                 <InputStyled name="model" {...formik.getFieldProps('model')} />
                 <Error name="model" />
               </Col>
             </FormGroup>
             <FormGroup row>
               <Col sm={8}>
-                <LabelStyled>Reference:</LabelStyled>
+                <LabelStyled>Referência:</LabelStyled>
                 <InputStyled
                   name="reference"
                   {...formik.getFieldProps('reference')}
@@ -116,7 +120,7 @@ function VehicleNew() {
                 <Error name="reference" />
               </Col>
               <Col sm={4}>
-                <LabelStyled>Device:</LabelStyled>
+                <LabelStyled>Dispositivo:</LabelStyled>
                 <InputStyled
                   name="device_id"
                   type="select"
@@ -132,10 +136,10 @@ function VehicleNew() {
               color="primary"
               disabled={formik.isSubmitting}
             >
-              Create
+              Salvar
             </Button>{' '}
             <Button color="secondary" onClick={() => history.push('/vehicles')}>
-              Cancel
+              Cancelar
             </Button>
           </Form>
         )}

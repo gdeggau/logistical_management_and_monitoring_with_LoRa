@@ -15,11 +15,11 @@ function User() {
   const columns = useMemo(
     () => [
       {
-        Header: 'Name',
+        Header: 'Nome',
         accessor: 'name',
       },
       {
-        Header: 'Last name',
+        Header: 'Sobrenome',
         accessor: 'last_name',
       },
       {
@@ -27,21 +27,21 @@ function User() {
         accessor: 'email',
       },
       {
-        Header: 'Telephone',
+        Header: 'Celular',
         accessor: 'telephone',
       },
       {
-        Header: 'Type',
+        Header: 'Perfil',
         accessor: 'role',
         Filter: SelectColumnFilter,
         filter: 'equals',
       },
       {
-        Header: 'Created at',
+        Header: 'Criado em',
         accessor: ({ created_at }) => dateFormat(created_at || ''),
       },
       {
-        Header: 'Actions',
+        Header: 'Ações',
         accessor: () => {
           return (
             <div
@@ -82,7 +82,7 @@ function User() {
       <>
         <TableContainer columns={columns} data={user} size="sm" />
         <Link to="/users/new">
-          <Button color="primary">New user</Button>
+          <Button color="primary">Novo usuário</Button>
         </Link>
       </>
     </Wrapper>
