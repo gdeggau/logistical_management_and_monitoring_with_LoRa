@@ -73,7 +73,7 @@ function VehicleNew() {
           try {
             await api.post('/vehicles', values);
 
-            toast.success(`New vehicle created!`, {
+            toast.success(`Veículo cadastrado!`, {
               autoClose: 5000,
             });
 

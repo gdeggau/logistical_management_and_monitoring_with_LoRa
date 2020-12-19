@@ -80,7 +80,7 @@ function Catalog() {
 
       const { order_number } = response.data;
 
-      toast.success(`Your order ${order_number} is waiting to be delivered!`, {
+      toast.success(`Seu pedido ${order_number} está aguardando a entrega!`, {
         autoClose: 5000,
       });
     } catch (err) {

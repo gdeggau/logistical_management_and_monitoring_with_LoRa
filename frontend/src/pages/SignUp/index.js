@@ -58,16 +58,13 @@ export default function SignUp() {
             dispatch(
               signUpRequest(name, last_name, telephone, email, password)
             );
-            toast.success(
-              `Welcome ${name}! Please, login below with your credentials!`,
-              {
-                autoClose: 5000,
-              }
-            );
+            toast.success(`Bem vindo ${name}!`, {
+              autoClose: 5000,
+            });
           } catch (err) {
             // const errorMessage = err.response.data.error;
             // console.log(errorMessage);
-            toast.error('An error has occurred, please contact system admin!', {
+            toast.error('Ocorreu um erro, favor contatar o administrador!', {
               autoClose: 5000,
             });
           }

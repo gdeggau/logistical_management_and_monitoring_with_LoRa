@@ -46,7 +46,7 @@ function UserNew() {
             payload.password = password;
             await api.post('/users', payload);
 
-            toast.success(`New ${values.role} created!`, {
+            toast.success(`Novo ${values.role} cadastrado!`, {
               autoClose: 5000,
             });
 

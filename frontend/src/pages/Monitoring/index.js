@@ -503,6 +503,7 @@ function Monitoring() {
         />
         {renderRouteFromSelectedCargo()}
         {renderSelectCargoOnMap()}
+        {renderOrdersFromSelectedCargo()}
         {/* {renderCargosLocations()} */}
         {popoverCargoOpen && (
           <Popup
@@ -518,7 +519,6 @@ function Monitoring() {
             <PopupCargo cargo={selectedCargo} />
           </Popup>
         )}
-        {renderOrdersFromSelectedCargo()}
         {popoverOrderOpen && (
           <Popup
             latitude={parseFloat(selectedOrder.delivery_adress.latitude)}

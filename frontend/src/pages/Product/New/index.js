@@ -24,7 +24,7 @@ function ProductNew() {
           try {
             await api.post('/products', values);
 
-            toast.success(`New product created!`, {
+            toast.success(`Produto cadastrado com sucesso!`, {
               autoClose: 5000,
             });
 

@@ -29,7 +29,7 @@ export function* signIn({ payload }) {
     if (user.adresses.length === 0) history.push('/adresses/new');
     else history.push('/catalog');
   } catch (err) {
-    toast.error('E-mail or password is wrong!');
+    toast.error('E-mail e/ou senha estão errados!');
     yield put(signFailure());
   }
 }

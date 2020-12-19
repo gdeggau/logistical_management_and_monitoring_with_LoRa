@@ -106,7 +106,7 @@ function AddressNew({ match }) {
           })
           .catch(() => {
             setNullToFields();
-            toast.error('Was note possible find the ZIP Code informed!');
+            toast.error('Não foi possível encontrar o CEP informado!');
           });
       } else {
         setNullToFields();
@@ -139,7 +139,7 @@ function AddressNew({ match }) {
               await api.post('/adresses/user', values);
             }
 
-            toast.success('Address saved!', {
+            toast.success('Endereço salvo com sucesso!', {
               autoClose: 5000,
             });
 
