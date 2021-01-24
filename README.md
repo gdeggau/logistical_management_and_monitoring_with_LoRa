@@ -23,29 +23,33 @@
   <a href="#setup">Setup</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#running">Running</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#techs">Techs</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#license">License</a>
   <!-- <a href="#techs">Techs</a> -->
   <!-- <a href="#créditos">Créditos</a> -->
 </p>
-<!-- 
+
 <h3 align="center">
   Web Application
 </h3>
 <p align="center">
-  <img src="https://github.com/gdeggau/logistical_management_and_monitoring_with_LoRa/blob/master/frontend/src/assets/rastreamento_print.PNG?raw=true" width=95%>
-</p> -->
+  <img src="https://github.com/gdeggau/logistical_management_and_monitoring_with_LoRa/blob/master/frontend/src/assets/tracking.PNG?raw=true">
+</p>
 
-<!-- <h3 align="center">
+<h3 align="center">
   Device
 </h3>
 <p align="center">
   <img src="https://github.com/gdeggau/logistical_management_and_monitoring_with_LoRa/blob/master/frontend/src/assets/device.PNG?raw=true" width=50%>
-</p> -->
+</p>
+<p align="center">
+  <img src="https://github.com/gdeggau/logistical_management_and_monitoring_with_LoRa/blob/master/frontend/src/assets/montagem%20do%20dispositivo.png?raw=true" width=80%>
+</p>
 
-## Article
+# Article
 
 The Article will be published by FURB library soon...
 
-## Resources
+# Resources
 
 The application has more functionalities like login, create products, users, devices and other ones, but the main are listed below:
 
@@ -57,7 +61,7 @@ The application has more functionalities like login, create products, users, dev
 - Scan order's barcode
 - Track cargos
 
-## Prerequisites
+# Prerequisites
 
 Below are listed softwares that you must install to run the application:
 
@@ -73,7 +77,15 @@ To show map at frontend and geocoding user addresses it is used Mapbox API, so y
 
 LoRaWAN network server used is from [KORE Wireless](https://br.korewireless.com/) company. To user their services, you must contact them and choose/contract a plan that makes more sense for your application. Here, it was used the biggest one, G plan.
 
-## Setup
+To build the device, components below are necessary:
+
+- WiFi LoRa 32 (V2)
+- GPS GY-NEO6MV2
+- Protoboard 400 pins
+- 4 jumpers male to male
+- Portable charger (or other thing to power device)
+
+# Setup
 
 ### **Arduino IDE**
 
@@ -103,7 +115,7 @@ With access to KORE, you need to create an "organização", a "aplicação" and 
 - Create a database in mongoDB with tcc name
 - Create an account/project in [Sentry](https://sentry.io/welcome/) and set SENTRY_DSN property in backend/.env (it is not necessary, used to errors monitoring)
 
-## Running
+# Running
 
 ### **Backend**
 
@@ -141,7 +153,7 @@ $ yarn start
 
 - Compile and upload the lorawan_example.ino file to the device
 
-## Techs
+# Techs
 
 | Backend           | Frontend           | Device               |
 | ----------------- | ------------------ | -------------------- |
@@ -155,11 +167,6 @@ $ yarn start
 | JWT               | cep-promise        |                      |
 | Sentry            | react-table        |                      |
 
-- [JavaScript](https://www.javascript.com/)
-- [ReactJS](https://pt-br.reactjs.org/)
-- [Styled-Components](https://styled-components.com/)
-- [JSON Server](https://github.com/typicode/json-server)
+# License
 
-## Créditos:
-
-Aplicação construída durante a semana Imersão React, realizada pela [Alura](https://www.alura.com.br/).
+[MIT](https://github.com/gdeggau/logistical_management_and_monitoring_with_LoRa/blob/master/LICENSE)
