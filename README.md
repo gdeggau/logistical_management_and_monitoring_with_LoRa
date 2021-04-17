@@ -47,7 +47,7 @@
 
 # Article
 
-The Article will be published by FURB library soon...
+- [PT-BR](http://dsc.inf.furb.br/arquivos/tccs/monografias/2020_2_gabriel-deggau-schmidt_monografia.pdf)
 
 # Resources
 
