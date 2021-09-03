@@ -19,7 +19,7 @@
     "file-saver": "^2.0.2",
     "formik": "^2.1.5",
     "history": "4.10.1",
-    "immer": "^8.0.1",
+    "immer": "^9.0.6",
     "jsbarcode": "^3.11.3",
     "localtunnel": "^2.0.0",
     "polished": "^3.6.5",
