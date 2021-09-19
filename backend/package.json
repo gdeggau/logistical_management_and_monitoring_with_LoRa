@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@sentry/node": "5.19.2",
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "cls-hooked": "^4.2.2",
     "cors": "^2.8.5",
